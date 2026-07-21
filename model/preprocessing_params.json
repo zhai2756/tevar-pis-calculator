@@ -1,0 +1,77 @@
+{
+  "pipeline": "clip to clinical bounds -> derive squared term -> RobustScaler (z = (x - median) / IQR) -> ordinal-encode TBAD stratum",
+  "clinical_bounds": {
+    "age": [
+      18,
+      100
+    ],
+    "operation_time_min": [
+      0,
+      600
+    ],
+    "contrast_ml": [
+      0,
+      500
+    ],
+    "neut_pre": [
+      0.5,
+      40
+    ],
+    "aptt_pre": [
+      15,
+      100
+    ],
+    "fib_pre": [
+      0.5,
+      15
+    ],
+    "plt_pre": [
+      20,
+      800
+    ]
+  },
+  "robust_scaler": {
+    "age": {
+      "median": 63.0,
+      "iqr": 21.0
+    },
+    "operation_time_min": {
+      "median": 115.0,
+      "iqr": 105.0
+    },
+    "contrast_ml": {
+      "median": 25.0,
+      "iqr": 1.0
+    },
+    "neut_pre": {
+      "median": 5.58,
+      "iqr": 4.1325
+    },
+    "aptt_pre": {
+      "median": 33.5347222222222,
+      "iqr": 9.924999999999997
+    },
+    "fib_pre": {
+      "median": 3.37,
+      "iqr": 1.7125
+    },
+    "neut_pre_sq": {
+      "median": 31.136400000000002,
+      "iqr": 50.138024999999985
+    },
+    "plt_pre": {
+      "median": 172.0,
+      "iqr": 84.25
+    }
+  },
+  "tbad_stratum_encoding": {
+    "1 (Complicated)": 0,
+    "2 (Uncomplicated with high-risk features)": 1,
+    "3 (Uncomplicated)": 2
+  },
+  "derived_features": {
+    "neut_pre_sq": "neut_pre^2 computed after clipping, then standardized with its own median/IQR"
+  },
+  "scaler_object": "stage1_optimized/scaler.pkl (RobustScaler fitted on training set, n=540)",
+  "random_state": 42
+}

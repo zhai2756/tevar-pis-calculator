@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIS Risk Calculator after TEVAR — Post-Implantation Syndrome</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 920px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 24px; }
+        .header h1 { font-size: 1.9em; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .header p { opacity: 0.92; font-size: 0.98em; line-height: 1.6; }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .card-title {
+            font-size: 1.25em;
+            color: #333;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .icon { font-size: 1.3em; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+        .form-group label .unit { font-weight: normal; color: #888; font-size: 0.85em; }
+        .form-group input, .form-group select {
+            padding: 11px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .form-group input.out-of-range { border-color: #ff9800; background: #fff8e1; }
+        .range-hint { font-size: 0.78em; color: #999; margin-top: 4px; line-height: 1.4; }
+        .range-hint.warn { color: #e65100; font-weight: 600; }
+        .btn-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+        .btn-calculate {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.15em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5); }
+        .btn-example {
+            padding: 15px 18px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            font-size: 0.92em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-example:hover { background: #f0f2ff; }
+        .result-section { display: none; }
+        .result-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .probability-display {
+            text-align: center;
+            padding: 24px 20px 18px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .gauge-container { width: 100%; max-width: 420px; margin: 0 auto; }
+        .gauge-text { font-size: 2.6em; font-weight: 800; text-anchor: middle; }
+        .gauge-label { font-size: 0.95em; text-anchor: middle; fill: #666; }
+        .gauge-tick { font-size: 0.72em; text-anchor: middle; fill: #999; }
+        .risk-badge {
+            display: inline-block;
+            padding: 8px 26px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-top: 12px;
+        }
+        .risk-low { background: #d4edda; color: #155724; }
+        .risk-moderate { background: #fff3cd; color: #856404; }
+        .risk-high { background: #f8d7da; color: #721c24; }
+        .threshold-note { margin-top: 12px; font-size: 0.92em; color: #555; }
+        .threshold-note strong { color: #333; }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 14px;
+            margin-top: 18px;
+        }
+        .detail-item {
+            background: #f8f9fa;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .detail-item .value { font-size: 1.35em; font-weight: 700; color: #667eea; }
+        .detail-item .label { font-size: 0.85em; color: #888; margin-top: 4px; }
+        .strata-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.9em; }
+        .strata-table th, .strata-table td {
+            padding: 9px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .strata-table th { background: #f5f6fa; color: #555; font-weight: 600; }
+        .strata-table tr.highlight td { font-weight: 700; }
+        .management-panel {
+            margin-top: 22px;
+            border-radius: 12px;
+            padding: 18px 20px;
+            border-left: 5px solid #667eea;
+            background: #f5f6fa;
+        }
+        .management-panel.low { border-left-color: #28a745; background: #f0f9f2; }
+        .management-panel.intermediate { border-left-color: #e0a800; background: #fdf8e8; }
+        .management-panel.high { border-left-color: #dc3545; background: #fdf1f2; }
+        .management-panel h3 { font-size: 1.05em; color: #333; margin-bottom: 10px; }
+        .management-panel ul { margin-left: 20px; font-size: 0.92em; color: #444; line-height: 1.75; }
+        .management-panel .mp-note { font-size: 0.8em; color: #888; margin-top: 10px; }
+        .feature-importance { margin-top: 22px; }
+        .importance-bar { display: flex; align-items: center; margin-bottom: 9px; }
+        .importance-label {
+            width: 210px;
+            font-size: 0.85em;
+            color: #555;
+            text-align: right;
+            padding-right: 10px;
+            flex-shrink: 0;
+        }
+        .importance-track {
+            flex: 1;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .importance-fill { height: 100%; border-radius: 10px; transition: width 0.8s ease; }
+        .importance-value {
+            width: 90px;
+            font-size: 0.82em;
+            font-weight: 600;
+            padding-left: 10px;
+            flex-shrink: 0;
+        }
+        .contrib-note { font-size: 0.8em; color: #888; margin-top: 6px; line-height: 1.5; }
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px 18px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.7;
+        }
+        .warn-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 14px;
+            font-size: 0.88em;
+            color: #7a4b00;
+            display: none;
+        }
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.75);
+            margin-top: 26px;
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.35em; }
+            .form-grid { grid-template-columns: 1fr; }
+            .importance-label { width: 130px; font-size: 0.75em; }
+            .importance-value { width: 70px; font-size: 0.75em; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 PIS Risk Calculator after TEVAR</h1>
+            <p>Post-implantation syndrome prediction in type B aortic dissection<br>
+            Ridge logistic regression (9 predictors) | Training n=540 | Internal validation n=136 (AUC 0.784) | External validation n=198 (AUC 0.801)</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="icon">📝</span>Patient Information (preoperative / intraoperative)</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Age <span class="unit">(years)</span></label>
+                    <input type="number" id="age" value="63" min="18" max="100" step="1" data-key="age">
+                    <div class="range-hint" id="hint_age">Training range 25–95, median 63</div>
+                </div>
+                <div class="form-group">
+                    <label>Operation time <span class="unit">(min)</span></label>
+                    <input type="number" id="operation_time" value="115" min="0" max="600" step="1" data-key="operation_time_min">
+                    <div class="range-hint" id="hint_operation_time">Training range 20–600 (clipped), median 115</div>
+                </div>
+                <div class="form-group">
+                    <label>Contrast volume <span class="unit">(mL)</span></label>
+                    <input type="number" id="contrast" value="25" min="0" max="500" step="1" data-key="contrast_ml">
+                    <div class="range-hint" id="hint_contrast">Training range 0–75, median 25</div>
+                </div>
+                <div class="form-group">
+                    <label>TBAD classification (by clinical severity)</label>
+                    <select id="tbad">
+                        <option value="1">1 — Complicated (rupture / impending rupture or malperfusion; emergency TEVAR)</option>
+                        <option value="2">2 — Uncomplicated with high-risk features (refractory pain/hypertension, high-risk imaging)</option>
+                        <option value="3" selected>3 — Uncomplicated (no complications or high-risk features)</option>
+                    </select>
+                    <div class="range-hint">Model encoding: 1 (Complicated) → 0, 2 (High-risk) → 1, 3 (Uncomplicated) → 2</div>
+                </div>
+                <div class="form-group">
+                    <label>Preoperative neutrophil count <span class="unit">(×10⁹/L)</span></label>
+                    <input type="number" id="neut" value="5.58" min="0.5" max="40" step="0.01" data-key="neut_pre">
+                    <div class="range-hint" id="hint_neut">Training range 0.5–40 (clipped), median 5.58</div>
+                </div>
+                <div class="form-group">
+                    <label>Preoperative APTT <span class="unit">(s)</span></label>
+                    <input type="number" id="aptt" value="33.5" min="15" max="100" step="0.1" data-key="aptt_pre">
+                    <div class="range-hint" id="hint_aptt">Training range 15–64.2 (lower bound clipped at 15), median 33.5</div>
+                </div>
+                <div class="form-group">
+                    <label>Preoperative fibrinogen <span class="unit">(g/L)</span></label>
+                    <input type="number" id="fib" value="3.37" min="0.5" max="15" step="0.01" data-key="fib_pre">
+                    <div class="range-hint" id="hint_fib">Training range 0.5–9.75, median 3.37</div>
+                </div>
+                <div class="form-group">
+                    <label>Preoperative platelet count <span class="unit">(×10⁹/L)</span></label>
+                    <input type="number" id="plt" value="172" min="20" max="800" step="1" data-key="plt_pre">
+                    <div class="range-hint" id="hint_plt">Training range 20–577, median 172</div>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn-calculate" onclick="calculateRisk()">🔍 Calculate PIS Risk</button>
+                <button class="btn-example" onclick="loadExample('low')">Low-risk example</button>
+                <button class="btn-example" onclick="loadExample('mid')">Intermediate example</button>
+                <button class="btn-example" onclick="loadExample('high')">High-risk example</button>
+            </div>
+        </div>
+
+        <div class="card result-section" id="resultSection">
+            <div class="card-title"><span class="icon">📊</span>Prediction Result</div>
+
+            <div class="probability-display">
+                <svg class="gauge-container" viewBox="0 0 400 235" id="gaugeSvg">
+                    <path id="zoneLow"  fill="none" stroke="#28a745" stroke-width="20" stroke-linecap="butt" opacity="0.30"/>
+                    <path id="zoneMid"  fill="none" stroke="#ffc107" stroke-width="20" stroke-linecap="butt" opacity="0.30"/>
+                    <path id="zoneHigh" fill="none" stroke="#dc3545" stroke-width="20" stroke-linecap="butt" opacity="0.30"/>
+                    <path id="gaugeFill" d="M 50 200 A 150 150 0 0 1 50 200.1" fill="none" stroke="#667eea" stroke-width="20" stroke-linecap="round"/>
+                    <text x="200" y="178" class="gauge-text" id="gaugeText">--%</text>
+                    <text x="200" y="205" class="gauge-label">Predicted PIS probability</text>
+                    <text x="52" y="228" class="gauge-tick">0%</text>
+                    <text x="200" y="32" class="gauge-tick">50%</text>
+                    <text x="348" y="228" class="gauge-tick">100%</text>
+                </svg>
+                <div><span id="riskBadge" class="risk-badge"></span></div>
+                <div class="threshold-note" id="thresholdNote"></div>
+            </div>
+
+            <div class="management-panel" id="managementPanel">
+                <h3 id="mpTitle">Recommended management</h3>
+                <ul id="mpList"></ul>
+                <div class="mp-note">Three-tier risk-adjusted pathway from the source study. These are general suggestions — always follow institutional protocols and the treating physician's judgment.</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="value" id="detailProb">-</div>
+                    <div class="label">Predicted probability</div>
+                </div>
+                <div class="detail-item">
+                    <div class="value" id="detailLogit">-</div>
+                    <div class="label">Logit score</div>
+                </div>
+                <div class="detail-item">
+                    <div class="value" id="detailThreshold">0.321</div>
+                    <div class="label">Decision threshold (Youden)</div>
+                </div>
+                <div class="detail-item">
+                    <div class="value" id="detailClass">-</div>
+                    <div class="label">Threshold classification</div>
+                </div>
+            </div>
+
+            <div class="strata-table-wrap">
+                <table class="strata-table">
+                    <thead>
+                        <tr><th>Risk stratum</th><th>Predicted probability</th><th>Share of external cohort (n=198)</th><th>Observed PIS rate</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr id="rowLow"><td>Low</td><td>&lt; 15%</td><td>61.1% (121/198)</td><td>10.7%</td></tr>
+                        <tr id="rowMid"><td>Intermediate</td><td>15% – 30%</td><td>24.7% (49/198)</td><td>28.6%</td></tr>
+                        <tr id="rowHigh"><td>High</td><td>&gt; 30%</td><td>14.1% (28/198)</td><td>42.9%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="feature-importance">
+                <div class="card-title" style="margin-top: 20px; font-size: 1.1em;">
+                    <span class="icon">📈</span>Feature contributions to this prediction (additive logit decomposition)
+                </div>
+                <div id="importanceBars"></div>
+                <div class="contrib-note">
+                    Contribution = model coefficient × standardized value (RobustScaler: z = (x − median) / IQR). Red = increases risk, green = decreases risk. The intercept (+0.025) plus all contributions equals the logit score.
+                </div>
+            </div>
+
+            <div class="warn-box" id="clipWarn"></div>
+
+            <div class="info-box">
+                <strong>💡 About this model</strong>
+                <ul style="margin-left: 20px; margin-top: 8px;">
+                    <li>Model: Ridge logistic regression (L2 penalty, C=0.667, lbfgs) with 9 predictors, including a squared neutrophil term</li>
+                    <li>Development cohort: Northern Jiangsu People's Hospital (training n=540; 10-fold cross-validation AUC 0.806; training AUC 0.839)</li>
+                    <li>Validation: internal n=136, AUC 0.784 (95% CI 0.684–0.884); external n=198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097</li>
+                    <li>Threshold 0.321 (Youden-optimal, derived from development data): sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4% (internal validation)</li>
+                    <li>Inputs outside the clinical bounds used in model training are clipped before calculation (age 18–100 y; operation time 0–600 min; contrast 0–500 mL; neutrophils 0.5–40; APTT 15–100; fibrinogen 0.5–15; platelets 20–800)</li>
+                    <li>This tool is for research use only and does not replace clinical judgment</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Post-Implantation Syndrome (PIS) Prediction Model v2.1 | Ridge logistic regression (9 features)</p>
+            <p>Development: Northern Jiangsu People's Hospital (n=676, Jan 2021 – Dec 2024) | External validation: The Second Affiliated Hospital of Nanjing Medical University (n=198, Jan 2023 – Apr 2026)</p>
+            <p>Runs entirely in your browser — no data leaves the device | For research use only</p>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // Ridge logistic regression (final model, C=0.667, lbfgs, seed=42)
+        // Coefficients apply to RobustScaler-standardized features:
+        //     z = (x - median) / IQR
+        // Authoritative sources: FINAL_DELIVERABLES/01_models/ridge_final_model.pkl
+        //                        + nomogram_data.json (scaling_params)
+        // Formula verified case-by-case on the training set (n=540,
+        // max |diff| vs model = 2.2e-16) and external cohort (AUC 0.8008).
+        // ============================================================
+        const MODEL = {
+            intercept: 0.025123814353474844,
+            features: {
+                age:                { coef: -0.01915238755572214,  median: 63.0,    iqr: 21.0,     lo: 18,  hi: 100 },
+                operation_time_min: { coef:  0.39584791412833287,  median: 115.0,   iqr: 105.0,    lo: 0,   hi: 600 },
+                contrast_ml:        { coef: -0.032004663896344404, median: 25.0,    iqr: 1.0,      lo: 0,   hi: 500 },
+                neut_pre:           { coef:  1.1857042470361459,   median: 5.58,    iqr: 4.1325,   lo: 0.5, hi: 40  },
+                aptt_pre:           { coef: -0.3271537579631202,   median: 33.5347222222222, iqr: 9.924999999999997, lo: 15, hi: 100 },
+                fib_pre:            { coef:  0.01557414742000652,  median: 3.37,    iqr: 1.7125,   lo: 0.5, hi: 15  },
+                plt_pre:            { coef:  0.14972752105947712,  median: 172.0,   iqr: 84.25,    lo: 20,  hi: 800 },
+                neut_pre_sq:        { coef: -0.2891571542613174,   median: 31.136400000000002, iqr: 50.138024999999985 }
+            },
+            tbadCoef: -1.2359143258512328,   // cat_ordinal__tbad_stratum: raw 1->0, 2->1, 3->2 (not scaled)
+            threshold: 0.321,                // Youden-optimal threshold (development data)
+            strata: { low: 0.15, high: 0.30 } // Low <15% | Intermediate 15–30% | High >30%
+        };
+
+        const FEATURE_LABELS = [
+            ['neut_pre',      'Preoperative neutrophils'],
+            ['tbad',          'TBAD classification'],
+            ['neut_pre_sq',   'Neutrophils² (squared term)'],
+            ['operation_time_min', 'Operation time'],
+            ['aptt_pre',      'Preoperative APTT'],
+            ['contrast_ml',   'Contrast volume'],
+            ['plt_pre',       'Preoperative platelets'],
+            ['fib_pre',       'Preoperative fibrinogen'],
+            ['age',           'Age']
+        ];
+
+        // Three-tier risk-adjusted management pathway (source study, Clinical Implications)
+        const MANAGEMENT = {
+            low: {
+                title: '✅ Low risk (<15%) — Standard perioperative care',
+                cls: 'low',
+                items: [
+                    'Standard perioperative care pathway',
+                    'Routine vital-sign and temperature monitoring',
+                    'Inflammatory markers (WBC/neutrophils, CRP) on postoperative days 1 and 3',
+                    'Standard CTA surveillance (e.g., 1 month after TEVAR)',
+                    'No prophylactic anti-inflammatory therapy indicated'
+                ]
+            },
+            intermediate: {
+                title: '⚠️ Intermediate risk (15–30%) — Enhanced surveillance',
+                cls: 'intermediate',
+                items: [
+                    'Enhanced inflammatory-marker surveillance during the first 24–72 h postoperatively (temperature q6h; CRP/WBC every 24–48 h)',
+                    'Early symptomatic treatment (antipyretics / NSAIDs) if fever develops',
+                    'Maintain adequate hydration',
+                    'Confirm a downward trend of inflammatory markers before discharge'
+                ]
+            },
+            high: {
+                title: '🚨 High risk (>30%) — Intensified, individualized management',
+                cls: 'high',
+                items: [
+                    'Preoperative optimization where feasible (control active inflammation, correct coagulation abnormalities, consider timing of elective TEVAR)',
+                    'Consider an individualized anti-inflammatory strategy (NSAID ± corticosteroid) per institutional protocol',
+                    'Intensified postoperative monitoring in a step-down / ICU setting; daily CRP/WBC (± procalcitonin)',
+                    'Exclude infection (e.g., blood cultures) before attributing inflammation to PIS',
+                    'Multidisciplinary review; extend observation before discharge'
+                ]
+            }
+        };
+
+        function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+        function clip(x, lo, hi) { return Math.min(Math.max(x, lo), hi); }
+
+        // Gauge geometry: 180° semicircle, 0% at the left end, 100% at the right
+        const CX = 200, CY = 200, R = 150;
+        function arcPoint(frac) {
+            const rad = Math.PI * (1 - frac);
+            return [CX + R * Math.cos(rad), CY - R * Math.sin(rad)];
+        }
+        function arcPath(f0, f1) {
+            const [x0, y0] = arcPoint(f0), [x1, y1] = arcPoint(f1);
+            const largeArc = (f1 - f0) > 0.5 ? 1 : 0;
+            return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 ${largeArc} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+        }
+        function drawZones() {
+            document.getElementById('zoneLow').setAttribute('d',  arcPath(0, MODEL.strata.low));
+            document.getElementById('zoneMid').setAttribute('d',  arcPath(MODEL.strata.low, MODEL.strata.high));
+            document.getElementById('zoneHigh').setAttribute('d', arcPath(MODEL.strata.high, 1));
+        }
+        drawZones();
+
+        function readInputs() {
+            const raw = {
+                age:  parseFloat(document.getElementById('age').value),
+                operation_time_min: parseFloat(document.getElementById('operation_time').value),
+                contrast_ml: parseFloat(document.getElementById('contrast').value),
+                neut_pre: parseFloat(document.getElementById('neut').value),
+                aptt_pre: parseFloat(document.getElementById('aptt').value),
+                fib_pre:  parseFloat(document.getElementById('fib').value),
+                plt_pre:  parseFloat(document.getElementById('plt').value)
+            };
+            for (const k in raw) {
+                if (isNaN(raw[k])) { alert('Please complete all numeric input fields.'); return null; }
+            }
+            raw.tbad_raw = parseInt(document.getElementById('tbad').value, 10); // 1/2/3
+            return raw;
+        }
+
+        function computePrediction(inp) {
+            const F = MODEL.features;
+            const clipped = {}, clipNotes = [];
+            for (const k of ['age','operation_time_min','contrast_ml','neut_pre','aptt_pre','fib_pre','plt_pre']) {
+                const c = clip(inp[k], F[k].lo, F[k].hi);
+                if (c !== inp[k]) clipNotes.push(`${labelOf(k)}: ${inp[k]} → ${c} (clinical bound ${F[k].lo}–${F[k].hi})`);
+                clipped[k] = c;
+            }
+            const tbadEnc = {1: 0, 2: 1, 3: 2}[inp.tbad_raw];
+
+            const z = {}, contrib = {};
+            for (const k of ['age','operation_time_min','contrast_ml','neut_pre','aptt_pre','fib_pre','plt_pre']) {
+                z[k] = (clipped[k] - F[k].median) / F[k].iqr;
+                contrib[k] = F[k].coef * z[k];
+            }
+            const nsq = clipped.neut_pre * clipped.neut_pre;      // squared term computed after clipping
+            z.neut_pre_sq = (nsq - F.neut_pre_sq.median) / F.neut_pre_sq.iqr;
+            contrib.neut_pre_sq = F.neut_pre_sq.coef * z.neut_pre_sq;
+            contrib.tbad = MODEL.tbadCoef * tbadEnc;
+
+            let logit = MODEL.intercept;
+            for (const k in contrib) logit += contrib[k];
+            return { prob: sigmoid(logit), logit, contrib, clipNotes, tbadEnc };
+        }
+
+        function labelOf(k) {
+            const m = { age:'Age', operation_time_min:'Operation time', contrast_ml:'Contrast volume',
+                        neut_pre:'Neutrophils', aptt_pre:'APTT', fib_pre:'Fibrinogen', plt_pre:'Platelets' };
+            return m[k] || k;
+        }
+
+        function calculateRisk() {
+            const inp = readInputs();
+            if (!inp) return;
+            const { prob, logit, contrib, clipNotes } = computePrediction(inp);
+            const pct = (prob * 100).toFixed(1);
+
+            // Risk stratification (locked cut-offs: <15% / 15–30% / >30%)
+            let riskClass, riskText, rowId, color, tier;
+            if (prob < MODEL.strata.low) {
+                riskClass = 'risk-low'; riskText = 'Low risk'; rowId = 'rowLow'; color = '#28a745'; tier = 'low';
+            } else if (prob < MODEL.strata.high) {
+                riskClass = 'risk-moderate'; riskText = 'Intermediate risk'; rowId = 'rowMid'; color = '#e0a800'; tier = 'intermediate';
+            } else {
+                riskClass = 'risk-high'; riskText = 'High risk'; rowId = 'rowHigh'; color = '#dc3545'; tier = 'high';
+            }
+
+            // Gauge
+            document.getElementById('gaugeFill').setAttribute('d', arcPath(0, Math.max(prob, 0.001)));
+            document.getElementById('gaugeFill').setAttribute('stroke', color);
+            const gt = document.getElementById('gaugeText');
+            gt.textContent = pct + '%';
+            gt.setAttribute('fill', color);
+
+            // Badge + strata-table highlight
+            const badge = document.getElementById('riskBadge');
+            badge.className = 'risk-badge ' + riskClass;
+            badge.textContent = `${riskText} (${pct}%)`;
+            ['rowLow','rowMid','rowHigh'].forEach(id => {
+                document.getElementById(id).className = (id === rowId) ? 'highlight' : '';
+                document.getElementById(id).style.background = (id === rowId) ? '#f0f2ff' : '';
+            });
+
+            // Management panel
+            const mg = MANAGEMENT[tier];
+            const panel = document.getElementById('managementPanel');
+            panel.className = 'management-panel ' + mg.cls;
+            document.getElementById('mpTitle').textContent = mg.title;
+            document.getElementById('mpList').innerHTML = mg.items.map(i => `<li>${i}</li>`).join('');
+
+            // Threshold classification
+            const overThr = prob >= MODEL.threshold;
+            document.getElementById('thresholdNote').innerHTML = overThr
+                ? `⚠️ Predicted probability ≥ decision threshold <strong>0.321</strong>: classified as <strong>PIS high-risk (positive)</strong>. Intensified postoperative monitoring of temperature and inflammatory markers is advised.`
+                : `✅ Predicted probability &lt; decision threshold <strong>0.321</strong>: classified as <strong>low-risk (negative)</strong> (specificity 94.6%, NPV 91.4% at this threshold).`;
+            document.getElementById('detailProb').textContent = pct + '%';
+            document.getElementById('detailLogit').textContent = logit.toFixed(3);
+            const dc = document.getElementById('detailClass');
+            dc.textContent = overThr ? 'Positive (≥0.321)' : 'Negative (<0.321)';
+            dc.style.color = overThr ? '#dc3545' : '#28a745';
+
+            // Contribution bars (sorted by |contribution|)
+            const rows = FEATURE_LABELS.map(([k, label]) => ({ label, v: contrib[k] }));
+            rows.sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+            const maxAbs = Math.max(...rows.map(r => Math.abs(r.v)), 1e-9);
+            let html = '';
+            rows.forEach(r => {
+                const w = (Math.abs(r.v) / maxAbs * 100).toFixed(1);
+                const c = r.v > 0 ? '#dc3545' : '#28a745';
+                const sign = r.v > 0 ? '+' : '';
+                html += `
+                    <div class="importance-bar">
+                        <div class="importance-label">${r.label}</div>
+                        <div class="importance-track">
+                            <div class="importance-fill" style="width:${w}%; background:${c};"></div>
+                        </div>
+                        <div class="importance-value" style="color:${c};">${sign}${r.v.toFixed(3)}</div>
+                    </div>`;
+            });
+            document.getElementById('importanceBars').innerHTML = html;
+
+            // Clipping notice
+            const wb = document.getElementById('clipWarn');
+            if (clipNotes.length > 0) {
+                wb.style.display = 'block';
+                wb.innerHTML = '<strong>⚠️ Input clipping notice:</strong> the following inputs exceeded the clinical bounds used during model training and were clipped before calculation:<br>· ' + clipNotes.join('<br>· ');
+            } else {
+                wb.style.display = 'none';
+            }
+
+            const rs = document.getElementById('resultSection');
+            rs.classList.add('active');
+            rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Example patients (outputs verified against the model)
+        const EXAMPLES = {
+            low:  { age: 50, operation_time: 80,  contrast: 10, tbad: '3', neut: 3.0, aptt: 40, fib: 2.5, plt: 150 },  // ≈4.9%
+            mid:  { age: 63, operation_time: 115, contrast: 25, tbad: '2', neut: 5.58, aptt: 33.5, fib: 3.37, plt: 172 }, // ≈23.0%
+            high: { age: 75, operation_time: 250, contrast: 60, tbad: '1', neut: 12.0, aptt: 25, fib: 5.0, plt: 300 }   // ≈75.4%
+        };
+        function loadExample(k) {
+            const e = EXAMPLES[k];
+            document.getElementById('age').value = e.age;
+            document.getElementById('operation_time').value = e.operation_time;
+            document.getElementById('contrast').value = e.contrast;
+            document.getElementById('tbad').value = e.tbad;
+            document.getElementById('neut').value = e.neut;
+            document.getElementById('aptt').value = e.aptt;
+            document.getElementById('fib').value = e.fib;
+            document.getElementById('plt').value = e.plt;
+            calculateRisk();
+        }
+
+        // Live hint when an input leaves the common training range
+        const TRAIN_RANGE = {
+            age: [25, 95], operation_time_min: [20, 600], contrast_ml: [0, 75],
+            neut_pre: [0.5, 21.6], aptt_pre: [22.4, 64.2], fib_pre: [1.27, 9.75], plt_pre: [61.6, 451.3]
+        };
+        document.querySelectorAll('input[data-key]').forEach(el => {
+            const h = el.parentElement.querySelector('.range-hint');
+            h.dataset.orig = h.textContent;
+            el.addEventListener('input', () => {
+                const k = el.dataset.key, v = parseFloat(el.value);
+                if (!isNaN(v) && TRAIN_RANGE[k] && (v < TRAIN_RANGE[k][0] || v > TRAIN_RANGE[k][1])) {
+                    el.classList.add('out-of-range');
+                    h.classList.add('warn');
+                    h.textContent = `⚠️ Outside the common training range (${TRAIN_RANGE[k][0]}–${TRAIN_RANGE[k][1]}); prediction is an extrapolation`;
+                } else {
+                    el.classList.remove('out-of-range');
+                    h.classList.remove('warn');
+                    h.textContent = h.dataset.orig;
+                }
+            });
+        });
+
+        // Calculate on Enter
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', e => { if (e.key === 'Enter') calculateRisk(); });
+        });
+    </script>
+</body>
+</html>

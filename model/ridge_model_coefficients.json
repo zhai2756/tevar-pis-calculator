@@ -1,0 +1,67 @@
+{
+  "model": "Ridge logistic regression",
+  "hyperparameters": {
+    "penalty": "l2",
+    "C": 0.6672367170464207,
+    "solver": "lbfgs",
+    "random_state": 42,
+    "max_iter": 1000
+  },
+  "intercept": 0.025123814353474844,
+  "features": [
+    "num__age",
+    "num__operation_time_min",
+    "num__contrast_ml",
+    "cat_ordinal__tbad_stratum",
+    "num__neut_pre",
+    "num__aptt_pre",
+    "num__fib_pre",
+    "num__neut_pre_sq",
+    "num__plt_pre"
+  ],
+  "coefficients": {
+    "num__age": -0.01915238755572214,
+    "num__operation_time_min": 0.39584791412833287,
+    "num__contrast_ml": -0.032004663896344404,
+    "cat_ordinal__tbad_stratum": -1.2359143258512328,
+    "num__neut_pre": 1.1857042470361459,
+    "num__aptt_pre": -0.3271537579631202,
+    "num__fib_pre": 0.01557414742000652,
+    "num__neut_pre_sq": -0.2891571542613174,
+    "num__plt_pre": 0.14972752105947712
+  },
+  "feature_labels_en": {
+    "num__age": "Age (years)",
+    "num__operation_time_min": "Operation Time (min)",
+    "num__contrast_ml": "Contrast Volume (mL)",
+    "cat_ordinal__tbad_stratum": "TBAD Stratum",
+    "num__neut_pre": "Neutrophil Pre-op",
+    "num__aptt_pre": "APTT Pre-op (s)",
+    "num__fib_pre": "Fibrinogen Pre-op (g/L)",
+    "num__neut_pre_sq": "Neutrophil²",
+    "num__plt_pre": "Platelet Pre-op"
+  },
+  "performance": {
+    "training": {
+      "n": 540,
+      "auc": 0.8386,
+      "brier": 0.1039
+    },
+    "internal_validation": {
+      "n": 136,
+      "auc": 0.7839,
+      "brier": 0.0972,
+      "youden_threshold": 0.3209,
+      "sensitivity": 0.583,
+      "specificity": 0.946,
+      "ppv": 0.7,
+      "npv": 0.914
+    },
+    "external_validation": {
+      "n": 198,
+      "auc": 0.8006,
+      "brier": 0.097
+    }
+  },
+  "notes": "Coefficients apply to RobustScaler-standardized features (see preprocessing_params.json). TBAD stratum is ordinal-encoded (1->0, 2->1, 3->2) and NOT scaled. The squared term neut_pre_sq is computed AFTER clinical-bound clipping, then standardized."
+}
