@@ -1,15 +1,17 @@
 # TEVAR-PIS Risk Calculator & Analysis Pipeline
 
+[![DOI](https://zenodo.org/badge/1307210657.svg)](https://doi.org/10.5281/zenodo.21466816)
+
 Code, model parameters, and the web-based calculator accompanying the study:
 
-> **Machine learning–based prediction of post-implantation syndrome (PIS) after thoracic endovascular aortic repair (TEVAR) in patients with type B aortic dissection: development and external validation of a Ridge logistic regression model.**
+**Machine learning–based prediction of post-implantation syndrome (PIS) after thoracic endovascular aortic repair (TEVAR) in patients with type B aortic dissection: development and external validation of a Ridge logistic regression model.**
 
 **Live calculator:** https://zhai2756.github.io/tevar-pis-calculator/
 
 ## Repository contents
 
 | Path | Content |
-|------|---------|
+|---|---|
 | `index.html` | Web-based PIS risk calculator (standalone, fully client-side; English UI with three-tier management recommendations) |
 | `model/ridge_final_model.pkl` | Final trained Ridge logistic regression model (scikit-learn) |
 | `model/ridge_model_coefficients.json` | All 9 coefficients + intercept, hyperparameters, and performance metrics |
@@ -21,20 +23,20 @@ Code, model parameters, and the web-based calculator accompanying the study:
 
 ## Model summary
 
-- **Algorithm**: Ridge logistic regression (L2 penalty, C = 0.667, solver = lbfgs, random_state = 42)
-- **Predictors (9)**: age, operation time, contrast volume, TBAD stratum, preoperative neutrophil count, preoperative APTT, preoperative fibrinogen, neutrophil count squared, preoperative platelet count
-- **Development**: Northern Jiangsu People's Hospital (training n = 540; 10-fold CV AUC 0.806; training AUC 0.839)
-- **Internal validation**: n = 136, AUC 0.784 (95% CI 0.684–0.884)
-- **External validation**: n = 198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097
-- **Decision threshold**: 0.321 (Youden-optimal; sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4%)
-- **Risk strata**: low < 15% | intermediate 15–30% | high > 30% (observed PIS rates in the external cohort: 10.7% / 28.6% / 42.9%)
+- **Algorithm:** Ridge logistic regression (L2 penalty, C = 0.667, solver = lbfgs, random_state = 42)
+- **Predictors (9):** age, operation time, contrast volume, TBAD stratum, preoperative neutrophil count, preoperative APTT, preoperative fibrinogen, neutrophil count squared, preoperative platelet count
+- **Development:** Northern Jiangsu People's Hospital (training n = 540; 10-fold CV mean AUC 0.818; pooled out-of-fold AUC 0.811, 95% CI 0.759–0.859; training AUC 0.839)
+- **Internal validation:** n = 136, AUC 0.784 (95% CI 0.684–0.884)
+- **External validation:** n = 198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097
+- **Decision threshold:** 0.321 (Youden-optimal; sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4%)
+- **Risk strata:** low < 15% | intermediate 15–30% | high > 30% (observed PIS rates in the external cohort: 8.9% / 10.7% / 54.3%)
 
 ## Prediction formula
 
 ```
-p = sigmoid( intercept + Σ coef_i · z_i )
-z_i = (x_i − median_i) / IQR_i          # RobustScaler, after clipping x_i to clinical bounds
-neut_pre_sq = (clipped neut_pre)²        # then standardized with its own median/IQR
+p = sigmoid(intercept + Σ coef_i · z_i)
+z_i = (x_i − median_i) / IQR_i        # RobustScaler, after clipping x_i to clinical bounds
+neut_pre_sq = (clipped neut_pre)²     # then standardized with its own median/IQR
 TBAD stratum: 1 (Complicated) → 0, 2 (High-risk) → 1, 3 (Uncomplicated) → 2   # ordinal, not scaled
 ```
 
@@ -46,7 +48,13 @@ The de-identified patient-level datasets are available from the corresponding au
 
 ## Requirements
 
-Python ≥ 3.10 with `scikit-learn ≥ 1.2`, `pandas`, `numpy`, `xgboost ≥ 1.7`, `lightgbm ≥ 3.0`, `shap ≥ 0.40`, `matplotlib`, `seaborn`, `statsmodels`.
+Python ≥ 3.10 with scikit-learn ≥ 1.2, pandas, numpy, xgboost ≥ 1.7, lightgbm ≥ 3.0, shap ≥ 0.40, matplotlib, seaborn, statsmodels.
+
+## Citation
+
+If you use this code or the calculator, please cite the archived release:
+
+> zhai2756. (2026). zhai2756/tevar-pis-calculator: v1.0.0 — Initial release (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.21466816
 
 ## Disclaimer
 
