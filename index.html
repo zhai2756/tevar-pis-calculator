@@ -229,7 +229,8 @@
         </div>
 
         <div class="card">
-            <div class="card-title"><span class="icon">📝</span>Patient Information (preoperative / intraoperative)</div>
+            <div class="card-title"><span class="icon">📝</span>Patient Information (at completion of TEVAR)</div>
+            <div class="info-box" style="margin:0 0 20px">Calculate after TEVAR, once operation time and contrast volume are available. This calculator is not intended for preoperative use or preoperative decision-making.</div>
             <div class="form-grid">
                 <div class="form-group">
                     <label>Age <span class="unit">(years)</span></label>
@@ -334,9 +335,9 @@
                         <tr><th>Risk stratum</th><th>Predicted probability</th><th>Share of external cohort (n=198)</th><th>Observed PIS rate</th></tr>
                     </thead>
                     <tbody>
-                        <tr id="rowLow"><td>Low</td><td>&lt; 15%</td><td>61.1% (121/198)</td><td>10.7%</td></tr>
-                        <tr id="rowMid"><td>Intermediate</td><td>15% – 30%</td><td>24.7% (49/198)</td><td>28.6%</td></tr>
-                        <tr id="rowHigh"><td>High</td><td>&gt; 30%</td><td>14.1% (28/198)</td><td>42.9%</td></tr>
+                        <tr id="rowLow"><td>Low</td><td>&lt; 15%</td><td>68.2% (135/198)</td><td>8.9%</td></tr>
+                        <tr id="rowMid"><td>Intermediate</td><td>15% – 30%</td><td>14.1% (28/198)</td><td>10.7%</td></tr>
+                        <tr id="rowHigh"><td>High</td><td>&gt; 30%</td><td>17.7% (35/198)</td><td>54.3%</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -367,8 +368,8 @@
         </div>
 
         <div class="footer">
-            <p>Post-Implantation Syndrome (PIS) Prediction Model v2.1 | Ridge logistic regression (9 features)</p>
-            <p>Development: Northern Jiangsu People's Hospital (n=676, Jan 2021 – Dec 2024) | External validation: The Second Affiliated Hospital of Nanjing Medical University (n=198, Jan 2023 – Apr 2026)</p>
+            <p>Post-Implantation Syndrome (PIS) Prediction Model v2.2 | Ridge logistic regression (9 features)</p>
+            <p>Development: Northern Jiangsu People's Hospital (n=676, Jan 2021 – Dec 2025) | External validation: The Second Affiliated Hospital of Nanjing Medical University (n=198, Jan 2023 – Dec 2025)</p>
             <p>Runs entirely in your browser — no data leaves the device | For research use only</p>
         </div>
     </div>
@@ -439,8 +440,8 @@
                 title: '🚨 High risk (>30%) — Intensified, individualized management',
                 cls: 'high',
                 items: [
-                    'Preoperative optimization where feasible (control active inflammation, correct coagulation abnormalities, consider timing of elective TEVAR)',
-                    'Consider an individualized anti-inflammatory strategy (NSAID ± corticosteroid) per institutional protocol',
+                    'Short-course individualized anti-inflammatory therapy (NSAIDs; corticosteroids for refractory pyrexia per institutional protocol) after exclusion of infection',
+                    'Avoid prolonged antibiotics without microbiological evidence of infection',
                     'Intensified postoperative monitoring in a step-down / ICU setting; daily CRP/WBC (± procalcitonin)',
                     'Exclude infection (e.g., blood cultures) before attributing inflammation to PIS',
                     'Multidisciplinary review; extend observation before discharge'
