@@ -134,6 +134,30 @@
       "passed": true,
       "detail": ""
     },
+    "original_pipeline_53_unique_features": {
+      "passed": true,
+      "detail": ""
+    },
+    "original_pipeline_lasso_grid": {
+      "passed": true,
+      "detail": ""
+    },
+    "original_pipeline_scripts_present": {
+      "passed": true,
+      "detail": ""
+    },
+    "original_pipeline_lasso_exact_reproduction": {
+      "passed": true,
+      "detail": ""
+    },
+    "readme_no_legacy_terms_or_doi": {
+      "passed": true,
+      "detail": ""
+    },
+    "readme_concept_doi": {
+      "passed": true,
+      "detail": ""
+    },
     "calculator_inclusive_30_percent_boundary": {
       "passed": true,
       "detail": ""
@@ -173,5 +197,5 @@
   },
   "all_pass": true,
   "failures": [],
-  "file_count_before_this_report": 36
+  "file_count_before_this_report": 41
 }

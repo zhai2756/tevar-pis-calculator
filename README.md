@@ -9,10 +9,11 @@ Code, locked model parameters, aggregate results, and a browser-based calculator
 The repository includes:
 
 - **Locked-model verification:** discrimination, calibration, threshold classification, and risk-stratum results for the three study cohorts.
+- **Recovered feature-selection analyses:** LASSO path generation, random-forest/XGBoost permutation importance, configuration files, and run instructions.
 - **Fully nested sensitivity analysis:** code and aggregate summaries for Supplementary Tables S21–S23.
 - **Figure 2 reconstruction:** code, frozen feature-level inputs, the voting table, and the rebuilt figure.
 
-The public release contains the code and aggregate artifacts for these analyses. Patient-level datasets and the historical raw-data feature-selection pipeline are not included.
+The public release contains code and aggregate artifacts for these analyses. Patient-level datasets are not included.
 
 ## Repository contents
 
@@ -26,6 +27,7 @@ The public release contains the code and aggregate artifacts for these analyses.
 | `code/bootstrap_or_ci.py` | Table 5 odds-ratio bootstrap refitting |
 | `results/locked_model_verification.json` | Aggregate locked-model verification report |
 | `results/table5_or_bootstrap_ci.json` | Table 5 point estimates and confidence intervals from 2,000 bootstrap refits |
+| `original_pipeline/` | Recovered feature-selection scripts, exact configuration, software requirements, and run instructions |
 | `fully_nested_l2/code/` | Preprocessing, feature selection, VIF filtering, inner tuning, outer evaluation, and patient-cluster bootstrap |
 | `fully_nested_l2/results/` | Nested-analysis summaries, tuning results, selection frequencies, bootstrap AUC distribution, and leakage audit |
 | `figure2_rebuild/` | Figure 2 code and frozen aggregate inputs |
@@ -79,6 +81,18 @@ python code/bootstrap_or_ci.py \
 
 The script first verifies that a full-training refit reproduces the frozen coefficients.
 
+## Feature-selection analyses
+
+`original_pipeline/` contains the recovered LASSO and permutation-importance scripts, the 53-feature order, model settings, and software requirements. Supply the processed training CSV with `pis` and the feature columns listed in `original_pipeline/config.json`, then run:
+
+```bash
+python -m pip install -r original_pipeline/requirements.txt
+python original_pipeline/code/lasso_cv.py --train-csv /path/to/preprocessed_train.csv
+python original_pipeline/code/permutation_importance.py --train-csv /path/to/preprocessed_train.csv
+```
+
+The LASSO script reproduces the locked 40-point cross-validated path and compares it with `figure2_rebuild/lasso_path.npz`. The permutation-importance script reports both the apparent analysis and the separately labelled cross-validated sensitivity analysis. See `original_pipeline/README.md` for configuration details and the scope of the historical XGBoost aggregate.
+
 ## Fully nested sensitivity analysis (S21–S23)
 
 The design uses 50 outer splits (stratified 10-fold cross-validation with 5 repeats), inner 5-fold tuning, and 1,000 patient-cluster bootstrap resamples. The mean repeat-level pooled out-of-fold AUC is 0.770389, with 95% CI 0.713004–0.822847. The median number of selected features per outer fold was 18 (range 10–24), and the median pairwise Jaccard similarity was 0.375.
@@ -102,19 +116,15 @@ See `figure2_rebuild/README.md` for input definitions and provenance. The script
 
 ## Requirements
 
-Python 3.10 or later; see `requirements.txt`. The calculator requires only a modern browser. Locked-result and nested-summary verification used numpy 2.4.4, pandas 3.0.2, scipy 1.18.1, and scikit-learn 1.9.0.
+The manuscript analyses used Python 3.10. Revision verification used Python 3.12.16 with numpy 2.4.4, pandas 3.0.2, scipy 1.18.1, scikit-learn 1.9.0, and joblib 1.5.3. Exact requirements for the recovered selection scripts, including XGBoost 3.3.0, are listed in `original_pipeline/requirements.txt`; general plotting and verification dependencies are listed in `requirements.txt`. The calculator requires only a modern browser.
 
 ## Data availability
 
 Patient-level datasets are available from the corresponding author upon reasonable request, subject to institutional data-governance requirements.
 
-## Archived versions
+## Zenodo archive
 
-Current release:
-
-> zhai2756. (2026). zhai2756/tevar-pis-calculator: v1.1.0: Revised manuscript files (v1.1.0). Zenodo. https://doi.org/10.5281/zenodo.24304506
-
-Earlier release: v1.0.0, https://doi.org/10.5281/zenodo.21466817. The concept DOI for all versions is https://doi.org/10.5281/zenodo.21466816.
+All software versions are linked under the concept DOI https://doi.org/10.5281/zenodo.21466816.
 
 ## Use
 
