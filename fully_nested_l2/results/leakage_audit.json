@@ -1,0 +1,16 @@
+{
+ "items": {
+  "1_outer_train_test_disjoint": true,
+  "2_each_repeat_covers_540_once": true,
+  "3_imputation_from_train_subset_only": true,
+  "4_robustscaler_from_train_subset_only": true,
+  "5_feature_selection_in_train_subset_only": true,
+  "6_vif_in_train_subset_only": true,
+  "7_c_selected_by_inner_validation_only": true,
+  "8_outer_test_used_for_prediction_only": true,
+  "9_excluded_model_selection_and_external": true,
+  "10_no_preprocessed_csv_input": true
+ },
+ "all_pass": true,
+ "note": "结构性核验基于逐折保存的索引与实现代码；插补/缩放/筛选/VIF/C选择均在当前训练子集内拟合（run_fully_nested_l2.py 与 preprocessing.py）"
+}
