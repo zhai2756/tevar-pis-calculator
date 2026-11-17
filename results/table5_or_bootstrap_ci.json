@@ -1,0 +1,83 @@
+{
+  "method": "Stratified patient-level bootstrap refitting of the locked nine-term L2-penalized logistic-regression model; percentile 95% CIs calculated on the coefficient (log-odds) scale and exponentiated.",
+  "n_bootstrap": 2000,
+  "random_seed": 42,
+  "C": 0.6672367170464207,
+  "n_training": 540,
+  "n_events": 97,
+  "max_abs_coefficient_difference_from_frozen_model": 0.0,
+  "features": {
+    "num__age": {
+      "coefficient": -0.01915238755572214,
+      "or": 0.9810298541099476,
+      "or_ci_low": 0.6589385363792608,
+      "or_ci_high": 1.5194140037317765,
+      "coefficient_ci_low": -0.4171250168426228,
+      "coefficient_ci_high": 0.41832473666408265
+    },
+    "num__operation_time_min": {
+      "coefficient": 0.39584791412833287,
+      "or": 1.4856433550043375,
+      "or_ci_low": 1.1297800881559485,
+      "or_ci_high": 1.8788828379267057,
+      "coefficient_ci_low": 0.12202300153345473,
+      "coefficient_ci_high": 0.6306773650688089
+    },
+    "num__contrast_ml": {
+      "coefficient": -0.032004663896344404,
+      "or": 0.9685020650754234,
+      "or_ci_low": 0.9273079477241958,
+      "or_ci_high": 0.9925423757316688,
+      "coefficient_ci_low": -0.07546957038965597,
+      "coefficient_ci_high": -0.00748557138093412
+    },
+    "cat_ordinal__tbad_stratum": {
+      "coefficient": -1.2359143258512328,
+      "or": 0.2905689661568719,
+      "or_ci_low": 0.18176977198387023,
+      "or_ci_high": 0.4193113763966206,
+      "coefficient_ci_low": -1.7050143817790517,
+      "coefficient_ci_high": -0.8691414932950651
+    },
+    "num__neut_pre": {
+      "coefficient": 1.1857042470361459,
+      "or": 3.2729910042278387,
+      "or_ci_low": 1.8370672285999288,
+      "or_ci_high": 5.473454067352891,
+      "coefficient_ci_low": 0.6081704025148492,
+      "coefficient_ci_high": 1.6999098737035474
+    },
+    "num__aptt_pre": {
+      "coefficient": -0.3271537579631202,
+      "or": 0.720972879182358,
+      "or_ci_low": 0.4342743040992895,
+      "or_ci_high": 1.0527268292256255,
+      "coefficient_ci_low": -0.8340789074379196,
+      "coefficient_ci_high": 0.051383778058124066
+    },
+    "num__fib_pre": {
+      "coefficient": 0.01557414742000652,
+      "or": 1.0156960565084134,
+      "or_ci_low": 0.7688225447604404,
+      "or_ci_high": 1.32827712029397,
+      "coefficient_ci_low": -0.262895097145658,
+      "coefficient_ci_high": 0.2838827042048176
+    },
+    "num__neut_pre_sq": {
+      "coefficient": -0.2891571542613174,
+      "or": 0.7488945041916772,
+      "or_ci_low": 0.6241362539605957,
+      "or_ci_high": 1.0070805632257849,
+      "coefficient_ci_low": -0.4713865787427639,
+      "coefficient_ci_high": 0.007055613739700931
+    },
+    "num__plt_pre": {
+      "coefficient": 0.14972752105947712,
+      "or": 1.161517710490904,
+      "or_ci_low": 0.8791746893821227,
+      "or_ci_high": 1.5413058836297595,
+      "coefficient_ci_low": -0.12877166454400876,
+      "coefficient_ci_high": 0.43263003347964607
+    }
+  }
+}

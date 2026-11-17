@@ -1,0 +1,100 @@
+{
+  "scope": "Aggregate point-estimate verification of the locked model; no model refitting",
+  "input": "Already processed stage-1 cohort CSVs supplied under data governance",
+  "model_json": "ridge_model_coefficients.json",
+  "cohorts": {
+    "training": {
+      "n": 540,
+      "events": 97,
+      "auc": 0.8385655442042308,
+      "brier": 0.10388313176133855,
+      "risk_strata": {
+        "low": {
+          "n": 357,
+          "events": 25,
+          "observed_rate": 0.0700280112044818
+        },
+        "intermediate": {
+          "n": 93,
+          "events": 15,
+          "observed_rate": 0.16129032258064516
+        },
+        "high": {
+          "n": 90,
+          "events": 57,
+          "observed_rate": 0.6333333333333333
+        }
+      }
+    },
+    "model_selection": {
+      "n": 136,
+      "events": 24,
+      "auc": 0.7838541666666666,
+      "brier": 0.0971503002004782,
+      "risk_strata": {
+        "low": {
+          "n": 95,
+          "events": 8,
+          "observed_rate": 0.08421052631578947
+        },
+        "intermediate": {
+          "n": 21,
+          "events": 2,
+          "observed_rate": 0.09523809523809523
+        },
+        "high": {
+          "n": 20,
+          "events": 14,
+          "observed_rate": 0.7
+        }
+      },
+      "classification": {
+        "threshold": 0.32094380290459346,
+        "tp": 14,
+        "fp": 6,
+        "tn": 106,
+        "fn": 10,
+        "sensitivity": 0.5833333333333334,
+        "specificity": 0.9464285714285714,
+        "ppv": 0.7,
+        "npv": 0.9137931034482759
+      }
+    },
+    "external": {
+      "n": 198,
+      "events": 34,
+      "auc": 0.8005738880918222,
+      "brier": 0.096970319448862,
+      "risk_strata": {
+        "low": {
+          "n": 135,
+          "events": 12,
+          "observed_rate": 0.08888888888888889
+        },
+        "intermediate": {
+          "n": 28,
+          "events": 3,
+          "observed_rate": 0.10714285714285714
+        },
+        "high": {
+          "n": 35,
+          "events": 19,
+          "observed_rate": 0.5428571428571428
+        }
+      },
+      "classification": {
+        "threshold": 0.321,
+        "tp": 19,
+        "fp": 13,
+        "tn": 151,
+        "fn": 15,
+        "sensitivity": 0.5588235294117647,
+        "specificity": 0.9207317073170732,
+        "ppv": 0.59375,
+        "npv": 0.9096385542168675
+      }
+    }
+  },
+  "locked_values_reproduced": true,
+  "failures": []
+}
