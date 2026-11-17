@@ -47,7 +47,7 @@
       "auc": 0.8386,
       "brier": 0.1039
     },
-    "internal_validation": {
+    "model_selection": {
       "n": 136,
       "auc": 0.7839,
       "brier": 0.0972,
