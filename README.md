@@ -4,7 +4,7 @@ Code, locked model parameters, aggregate results, and the web-based calculator a
 
 **Development and External Validation of a Penalized Logistic Regression Model to Predict Post-Implantation Syndrome After Thoracic Endovascular Aortic Repair in Patients With Type B Aortic Dissection.**
 
-> **Release status:** the revised source has been uploaded to GitHub. A revised Zenodo version has not yet been archived; until then, the DOI below refers only to v1.0.0.
+> **Release status:** the revised source is available on GitHub, and `v1.1.0` is archived on Zenodo.
 
 ## Scope and reproducibility boundary
 
@@ -112,13 +112,13 @@ Python 3.10 or later; see `requirements.txt`. The calculator itself requires onl
 
 Patient-level datasets are available only from the corresponding author upon reasonable request and subject to institutional data-governance requirements. Do not commit governed CSVs, patient identifiers, fold-level predictions, raw spreadsheets, or logs to the public repository. Keep controlled inputs outside the repository root.
 
-## Previous archive and citation
+## Archived versions
 
-The earlier archived release remains:
+Current release:
 
-> zhai2756. (2026). zhai2756/tevar-pis-calculator: v1.0.0 — Initial release (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.21466816
+> zhai2756. (2026). zhai2756/tevar-pis-calculator: v1.1.0: Revised manuscript files (v1.1.0). Zenodo. https://doi.org/10.5281/zenodo.24304506
 
-After this revised source is uploaded as a new version, update this section and the manuscript's **Archived version** entry with the new version and DOI. Do not describe these revised files as part of v1.0.0.
+Earlier release: v1.0.0, https://doi.org/10.5281/zenodo.21466817. The concept DOI for all versions is https://doi.org/10.5281/zenodo.21466816.
 
 ## Disclaimer
 
