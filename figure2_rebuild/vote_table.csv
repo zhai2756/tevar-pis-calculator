@@ -1,0 +1,10 @@
+feature,display,votes,FDR,LASSO,RF,XGB
+num__age,Age,3,True,False,True,True
+num__operation_time_min,Operation time,3,True,False,True,True
+num__contrast_ml,Contrast volume,3,False,True,True,True
+cat_ordinal__tbad_stratum,TBAD risk stratum,4,True,True,True,True
+num__neut_pre,Neutrophils,2,True,False,False,True
+num__aptt_pre,APTT,2,True,False,True,False
+num__fib_pre,Fibrinogen,2,True,False,True,False
+num__neut_pre_sq,Neutrophils$^2$,2,True,False,False,True
+num__plt_pre,Platelets,3,True,False,True,True

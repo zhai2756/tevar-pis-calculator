@@ -1,0 +1,24 @@
+{
+  "all9_ge2_votes": true,
+  "votes": {
+    "Age": 3,
+    "Operation time": 3,
+    "Contrast volume": 3,
+    "TBAD risk stratum": 4,
+    "Neutrophils": 2,
+    "APTT": 2,
+    "Fibrinogen": 2,
+    "Neutrophils$^2$": 2,
+    "Platelets": 3
+  },
+  "set_sizes": {
+    "FDR": 31,
+    "LASSO": 3,
+    "RF": 49,
+    "XGB": 13
+  },
+  "outputs": {
+    "png": "Figure2_feature_selection.png",
+    "pdf": "Figure2_feature_selection.pdf"
+  }
+}

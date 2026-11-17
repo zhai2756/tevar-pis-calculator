@@ -1,0 +1,279 @@
+{
+  "n": 540,
+  "p": 53,
+  "C_min": 0.05878016072274915,
+  "C_1se": 0.00701703828670383,
+  "auc_at_Cmin": 0.8018125701459035,
+  "se_at_Cmin": 0.03480609269548111,
+  "auc_at_C1se": 0.7726234567901233,
+  "sets": {
+    "FDR": [
+      "binary__pre_rupture_hypoperfusion",
+      "binary__refractory_pain_hypertension",
+      "binary__smoking",
+      "cat_ordinal__tbad_stratum",
+      "num__age",
+      "num__age_sq",
+      "num__age_x_neut",
+      "num__alb_pre",
+      "num__aptt_pre",
+      "num__bmi",
+      "num__bmi_sq",
+      "num__bmi_x_age",
+      "num__far",
+      "num__fib_pre",
+      "num__height_cm",
+      "num__inflammation_score",
+      "num__mono_pre",
+      "num__neut_pre",
+      "num__neut_pre_sq",
+      "num__nlr",
+      "num__nlr_sq",
+      "num__operation_time_min",
+      "num__plt_pre",
+      "num__pnr",
+      "num__sii",
+      "num__siri",
+      "num__siri_sq",
+      "num__siri_x_nlr",
+      "num__surgery_complexity",
+      "num__tbad_x_age",
+      "num__weight_kg"
+    ],
+    "LASSO": [
+      "cat_ordinal__tbad_stratum",
+      "num__contrast_ml",
+      "num__siri_sq"
+    ],
+    "RF": [
+      "binary__prior_aortic_surgery",
+      "cat_ordinal__tbad_stratum",
+      "num__age_x_neut",
+      "num__alb_pre",
+      "num__aptt_pre",
+      "num__bmi_x_age",
+      "num__lym_pre",
+      "num__nlr",
+      "num__operation_time_min",
+      "num__plt_pre",
+      "num__pni",
+      "num__siri",
+      "num__stent_count",
+      "num__surgery_complexity",
+      "num__tbad_x_age"
+    ],
+    "XGB": [
+      "binary__cad",
+      "cat_ordinal__tbad_stratum",
+      "num__age",
+      "num__age_x_neut",
+      "num__alb_pre",
+      "num__aptt_pre",
+      "num__bmi",
+      "num__bmi_x_age",
+      "num__bnp_pre",
+      "num__comorbidity_count",
+      "num__d_dimer_pre",
+      "num__fib_pre",
+      "num__height_cm",
+      "num__mono_pre",
+      "num__neut_pre",
+      "num__operation_time_min",
+      "num__plt_pre",
+      "num__stent_count",
+      "num__surgery_complexity",
+      "num__tbad_x_age"
+    ]
+  },
+  "votes": {
+    "binary__cad": 1,
+    "binary__pre_rupture_hypoperfusion": 1,
+    "binary__prior_aortic_surgery": 1,
+    "binary__refractory_pain_hypertension": 1,
+    "binary__smoking": 1,
+    "cat_ordinal__tbad_stratum": 4,
+    "num__age": 2,
+    "num__age_sq": 1,
+    "num__age_x_neut": 3,
+    "num__alb_pre": 3,
+    "num__aptt_pre": 3,
+    "num__bmi": 2,
+    "num__bmi_sq": 1,
+    "num__bmi_x_age": 3,
+    "num__bnp_pre": 1,
+    "num__comorbidity_count": 1,
+    "num__contrast_ml": 1,
+    "num__d_dimer_pre": 1,
+    "num__far": 1,
+    "num__fib_pre": 2,
+    "num__height_cm": 2,
+    "num__inflammation_score": 1,
+    "num__lym_pre": 1,
+    "num__mono_pre": 2,
+    "num__neut_pre": 2,
+    "num__neut_pre_sq": 1,
+    "num__nlr": 2,
+    "num__nlr_sq": 1,
+    "num__operation_time_min": 3,
+    "num__plt_pre": 3,
+    "num__pni": 1,
+    "num__pnr": 1,
+    "num__sii": 1,
+    "num__siri": 2,
+    "num__siri_sq": 2,
+    "num__siri_x_nlr": 1,
+    "num__stent_count": 2,
+    "num__surgery_complexity": 3,
+    "num__tbad_x_age": 3,
+    "num__weight_kg": 1
+  },
+  "final_votes": {
+    "num__age": {
+      "votes": 2,
+      "methods": [
+        "FDR",
+        "XGB"
+      ]
+    },
+    "num__operation_time_min": {
+      "votes": 3,
+      "methods": [
+        "FDR",
+        "RF",
+        "XGB"
+      ]
+    },
+    "num__contrast_ml": {
+      "votes": 1,
+      "methods": [
+        "LASSO"
+      ]
+    },
+    "cat_ordinal__tbad_stratum": {
+      "votes": 4,
+      "methods": [
+        "FDR",
+        "LASSO",
+        "RF",
+        "XGB"
+      ]
+    },
+    "num__neut_pre": {
+      "votes": 2,
+      "methods": [
+        "FDR",
+        "XGB"
+      ]
+    },
+    "num__aptt_pre": {
+      "votes": 3,
+      "methods": [
+        "FDR",
+        "RF",
+        "XGB"
+      ]
+    },
+    "num__fib_pre": {
+      "votes": 2,
+      "methods": [
+        "FDR",
+        "XGB"
+      ]
+    },
+    "num__neut_pre_sq": {
+      "votes": 1,
+      "methods": [
+        "FDR"
+      ]
+    },
+    "num__plt_pre": {
+      "votes": 3,
+      "methods": [
+        "FDR",
+        "RF",
+        "XGB"
+      ]
+    }
+  },
+  "ge2_features": [
+    "cat_ordinal__tbad_stratum",
+    "num__age",
+    "num__age_x_neut",
+    "num__alb_pre",
+    "num__aptt_pre",
+    "num__bmi",
+    "num__bmi_x_age",
+    "num__fib_pre",
+    "num__height_cm",
+    "num__mono_pre",
+    "num__neut_pre",
+    "num__nlr",
+    "num__operation_time_min",
+    "num__plt_pre",
+    "num__siri",
+    "num__siri_sq",
+    "num__stent_count",
+    "num__surgery_complexity",
+    "num__tbad_x_age"
+  ],
+  "nz_at_1se": {
+    "num__contrast_ml": -0.011739939917876495,
+    "num__siri_sq": 0.0069033923519380164,
+    "cat_ordinal__tbad_stratum": -0.2891395097310544
+  },
+  "feature_order": [
+    "num__age",
+    "num__age_sq",
+    "num__age_x_neut",
+    "num__alb_pre",
+    "num__aptt_pre",
+    "num__blood_loss_ml",
+    "num__bmi",
+    "num__bmi_sq",
+    "num__bmi_x_age",
+    "num__bnp_pre",
+    "num__comorbidity_count",
+    "num__contrast_ml",
+    "num__cre_pre",
+    "num__crp_pre",
+    "num__d_dimer_pre",
+    "num__far",
+    "num__fib_pre",
+    "num__height_cm",
+    "num__hgb_pre",
+    "num__inflammation_score",
+    "num__log_bnp_pre",
+    "num__log_cre_pre",
+    "num__log_crp_pre",
+    "num__log_d_dimer_pre",
+    "num__lym_pre",
+    "num__mono_pre",
+    "num__neut_pre",
+    "num__neut_pre_sq",
+    "num__nlr",
+    "num__nlr_sq",
+    "num__operation_time_min",
+    "num__plt_pre",
+    "num__pni",
+    "num__pnr",
+    "num__sii",
+    "num__siri",
+    "num__siri_sq",
+    "num__siri_x_nlr",
+    "num__stent_count",
+    "num__surgery_complexity",
+    "num__tbad_x_age",
+    "num__weight_kg",
+    "cat_ordinal__tbad_stage",
+    "cat_ordinal__tbad_stratum",
+    "binary__alcohol",
+    "binary__cad",
+    "binary__dm",
+    "binary__gender",
+    "binary__hypertension",
+    "binary__pre_rupture_hypoperfusion",
+    "binary__prior_aortic_surgery",
+    "binary__refractory_pain_hypertension",
+    "binary__smoking"
+  ]
+}
