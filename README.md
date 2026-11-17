@@ -4,7 +4,7 @@ Code, locked model parameters, aggregate results, and the web-based calculator a
 
 **Development and External Validation of a Penalized Logistic Regression Model to Predict Post-Implantation Syndrome After Thoracic Endovascular Aortic Repair in Patients With Type B Aortic Dissection.**
 
-> **Release status:** this revised package is a local release candidate. It has not yet been pushed to GitHub or archived as a new Zenodo version.
+> **Release status:** the revised source has been uploaded to GitHub. A revised Zenodo version has not yet been archived; until then, the DOI below refers only to v1.0.0.
 
 ## Scope and reproducibility boundary
 
@@ -16,7 +16,7 @@ This package supports three distinct tasks:
 
 **This is not a complete raw-data-to-final-model reproduction package.** The exact configuration used to generate the locked historical XGBoost importance table was not archived, and the original generator for the main feature-selection artifacts is therefore not claimed to be reproducible here. The fully nested sensitivity-analysis code must not be misrepresented as that missing original generator.
 
-Legacy `phase1_preprocessing.py`, `phase2_feature_selection.py`, and `phase4_final_model.py` scripts were intentionally excluded because their implementations did not faithfully match the current manuscript methods. Other legacy all-algorithm evaluation and figure scripts were also excluded from this focused release candidate.
+Legacy `phase1_preprocessing.py`, `phase2_feature_selection.py`, and `phase4_final_model.py` scripts were intentionally excluded because their implementations did not faithfully match the current manuscript methods. Other legacy all-algorithm evaluation and figure scripts were also excluded from this focused revised release.
 
 ## Repository contents
 
