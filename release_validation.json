@@ -1,0 +1,177 @@
+{
+  "package": "tevar-pis-calculator-revised",
+  "validation_date": "2026-11-17",
+  "checks": {
+    "release_directory_exists": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_git_metadata": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_data_or_log_directories": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_spreadsheets": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_fold_prediction_files": {
+      "passed": true,
+      "detail": ""
+    },
+    "legacy_phase_scripts_excluded": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_python_bytecode": {
+      "passed": true,
+      "detail": ""
+    },
+    "only_declared_aggregate_csvs": {
+      "passed": true,
+      "detail": "actual=['figure2_rebuild/rf_perm_importance.csv', 'figure2_rebuild/univariate_fdr.csv', 'figure2_rebuild/vote_table.csv', 'figure2_rebuild/xgb_perm_importance.csv', 'fully_nested_l2/results/c_tuning_summary.csv', 'fully_nested_l2/results/feature_selection_frequency.csv', 'fully_nested_l2/results/nested_auc_bootstrap.csv', 'fully_nested_l2/results/nested_metrics_by_repeat.csv']"
+    },
+    "aggregate_columns_figure2_rebuild/rf_perm_importance.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_figure2_rebuild/univariate_fdr.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_figure2_rebuild/vote_table.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_figure2_rebuild/xgb_perm_importance.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_fully_nested_l2/results/c_tuning_summary.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_fully_nested_l2/results/feature_selection_frequency.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_fully_nested_l2/results/nested_auc_bootstrap.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "aggregate_columns_fully_nested_l2/results/nested_metrics_by_repeat.csv": {
+      "passed": true,
+      "detail": "columns=[]"
+    },
+    "no_private_absolute_paths": {
+      "passed": true,
+      "detail": "files=[]"
+    },
+    "python_syntax": {
+      "passed": true,
+      "detail": ""
+    },
+    "locked_verification_passed": {
+      "passed": true,
+      "detail": ""
+    },
+    "locked_metrics_training": {
+      "passed": true,
+      "detail": "{\"n\": 540, \"events\": 97, \"auc\": 0.8385655442042308, \"brier\": 0.10388313176133855, \"risk_strata\": {\"low\": {\"n\": 357, \"events\": 25, \"observed_rate\": 0.0700280112044818}, \"intermediate\": {\"n\": 93, \"events\": 15, \"observed_rate\": 0.16129032258064516}, \"high\": {\"n\": 90, \"events\": 57, \"observed_rate\": 0.6333333333333333}}}"
+    },
+    "locked_metrics_model_selection": {
+      "passed": true,
+      "detail": "{\"n\": 136, \"events\": 24, \"auc\": 0.7838541666666666, \"brier\": 0.0971503002004782, \"risk_strata\": {\"low\": {\"n\": 95, \"events\": 8, \"observed_rate\": 0.08421052631578947}, \"intermediate\": {\"n\": 21, \"events\": 2, \"observed_rate\": 0.09523809523809523}, \"high\": {\"n\": 20, \"events\": 14, \"observed_rate\": 0.7}}, \"classification\": {\"threshold\": 0.32094380290459346, \"tp\": 14, \"fp\": 6, \"tn\": 106, \"fn\": 10, \"sensitivity\": 0.5833333333333334, \"specificity\": 0.9464285714285714, \"ppv\": 0.7, \"npv\": 0.9137931034482759}}"
+    },
+    "locked_metrics_external": {
+      "passed": true,
+      "detail": "{\"n\": 198, \"events\": 34, \"auc\": 0.8005738880918222, \"brier\": 0.096970319448862, \"risk_strata\": {\"low\": {\"n\": 135, \"events\": 12, \"observed_rate\": 0.08888888888888889}, \"intermediate\": {\"n\": 28, \"events\": 3, \"observed_rate\": 0.10714285714285714}, \"high\": {\"n\": 35, \"events\": 19, \"observed_rate\": 0.5428571428571428}}, \"classification\": {\"threshold\": 0.321, \"tp\": 19, \"fp\": 13, \"tn\": 151, \"fn\": 15, \"sensitivity\": 0.5588235294117647, \"specificity\": 0.9207317073170732, \"ppv\": 0.59375, \"npv\": 0.9096385542168675}}"
+    },
+    "locked_confusion_matrices": {
+      "passed": true,
+      "detail": ""
+    },
+    "nested_primary_auc": {
+      "passed": true,
+      "detail": ""
+    },
+    "nested_primary_value": {
+      "passed": true,
+      "detail": ""
+    },
+    "nested_bootstrap_ci": {
+      "passed": true,
+      "detail": ""
+    },
+    "nested_stability": {
+      "passed": true,
+      "detail": ""
+    },
+    "nested_leakage_audit": {
+      "passed": true,
+      "detail": ""
+    },
+    "figure2_set_sizes": {
+      "passed": true,
+      "detail": ""
+    },
+    "figure2_all_nine_at_least_two_votes": {
+      "passed": true,
+      "detail": ""
+    },
+    "figure2_portable_outputs": {
+      "passed": true,
+      "detail": ""
+    },
+    "figure2_vote_table_matches_frozen": {
+      "passed": true,
+      "detail": ""
+    },
+    "figure2_xgb_matches_locked_aggregate": {
+      "passed": true,
+      "detail": ""
+    },
+    "calculator_inclusive_30_percent_boundary": {
+      "passed": true,
+      "detail": ""
+    },
+    "calculator_no_network_calls": {
+      "passed": true,
+      "detail": ""
+    },
+    "calculator_descriptive_only": {
+      "passed": true,
+      "detail": ""
+    },
+    "calculator_intercept_matches_json": {
+      "passed": true,
+      "detail": ""
+    },
+    "calculator_constants_match_model_files": {
+      "passed": true,
+      "detail": "mismatches=[]"
+    },
+    "calculator_tbad_coefficient_matches_json": {
+      "passed": true,
+      "detail": ""
+    },
+    "calculator_prediction_low": {
+      "passed": true,
+      "detail": "observed={'prob': 0.04929210063296394, 'logit': -2.959443026689567}, expected_logit=-2.959443026689567, expected_prob=0.04929210063296394"
+    },
+    "calculator_prediction_mid": {
+      "passed": true,
+      "detail": "observed={'prob': 0.22976369724894488, 'logit': -1.2096459769400931}, expected_logit=-1.2096459769400931, expected_prob=0.22976369724894488"
+    },
+    "calculator_prediction_high": {
+      "passed": true,
+      "detail": "observed={'prob': 0.7535658580299069, 'logit': 1.1177216318231449}, expected_logit=1.1177216318231449, expected_prob=0.7535658580299069"
+    }
+  },
+  "all_pass": true,
+  "failures": [],
+  "file_count_before_this_report": 35
+}

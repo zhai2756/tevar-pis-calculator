@@ -225,7 +225,7 @@
         <div class="header">
             <h1>🏥 PIS Risk Calculator after TEVAR</h1>
             <p>Post-implantation syndrome prediction in type B aortic dissection<br>
-            Ridge logistic regression (9 predictors) | Training n=540 | Internal validation n=136 (AUC 0.784) | External validation n=198 (AUC 0.801)</p>
+            Ridge logistic regression (9 predictors) | Training n=540 | Model-selection set n=136 (AUC 0.784) | External validation n=198 (AUC 0.801)</p>
         </div>
 
         <div class="card">
@@ -305,9 +305,9 @@
             </div>
 
             <div class="management-panel" id="managementPanel">
-                <h3 id="mpTitle">Recommended management</h3>
+                <h3 id="mpTitle">Observed outcomes by research risk tier</h3>
                 <ul id="mpList"></ul>
-                <div class="mp-note">Three-tier risk-adjusted pathway from the source study. These are general suggestions — always follow institutional protocols and the treating physician's judgment.</div>
+                <div class="mp-note">Descriptive findings from the external validation cohort. No treatment or monitoring recommendation is made.</div>
             </div>
 
             <div class="details-grid">
@@ -359,8 +359,8 @@
                 <ul style="margin-left: 20px; margin-top: 8px;">
                     <li>Model: Ridge logistic regression (L2 penalty, C=0.667, lbfgs) with 9 predictors, including a squared neutrophil term</li>
                     <li>Development cohort: Northern Jiangsu People's Hospital (training n=540; 10-fold cross-validation AUC 0.806; training AUC 0.839)</li>
-                    <li>Validation: internal n=136, AUC 0.784 (95% CI 0.684–0.884); external n=198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097</li>
-                    <li>Threshold 0.321 (Youden-optimal, derived from development data): sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4% (internal validation)</li>
+                    <li>Validation: model-selection set n=136, AUC 0.784 (95% CI 0.684–0.884); external n=198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097</li>
+                    <li>Threshold 0.321 (Youden-optimal, derived from the model-selection set): sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4% (model-selection set)</li>
                     <li>Inputs outside the clinical bounds used in model training are clipped before calculation (age 18–100 y; operation time 0–600 min; contrast 0–500 mL; neutrophils 0.5–40; APTT 15–100; fibrinogen 0.5–15; platelets 20–800)</li>
                     <li>This tool is for research use only and does not replace clinical judgment</li>
                 </ul>
@@ -397,7 +397,7 @@
                 neut_pre_sq:        { coef: -0.2891571542613174,   median: 31.136400000000002, iqr: 50.138024999999985 }
             },
             tbadCoef: -1.2359143258512328,   // cat_ordinal__tbad_stratum: raw 1->0, 2->1, 3->2 (not scaled)
-            threshold: 0.321,                // Youden-optimal threshold (development data)
+            threshold: 0.321,                // Youden-optimal threshold (model-selection set)
             strata: { low: 0.15, high: 0.30 } // Low <15% | Intermediate 15–30% | High >30%
         };
 
@@ -413,38 +413,30 @@
             ['age',           'Age']
         ];
 
-        // Three-tier risk-adjusted management pathway (source study, Clinical Implications)
+        // Descriptive external-cohort outcomes by research risk tier; no management advice.
         const MANAGEMENT = {
             low: {
-                title: '✅ Low risk (<15%) — Standard perioperative care',
+                title: 'Low risk (<15%) — Observed external-cohort outcomes',
                 cls: 'low',
                 items: [
-                    'Standard perioperative care pathway',
-                    'Routine vital-sign and temperature monitoring',
-                    'Inflammatory markers (WBC/neutrophils, CRP) on postoperative days 1 and 3',
-                    'Standard CTA surveillance (e.g., 1 month after TEVAR)',
-                    'No prophylactic anti-inflammatory therapy indicated'
+                    '135 of 198 patients (68.2%) were in this tier',
+                    'Observed PIS: 12 of 135 patients (8.9%)'
                 ]
             },
             intermediate: {
-                title: '⚠️ Intermediate risk (15–30%) — Enhanced surveillance',
+                title: 'Intermediate risk (15–30%) — Observed external-cohort outcomes',
                 cls: 'intermediate',
                 items: [
-                    'Enhanced inflammatory-marker surveillance during the first 24–72 h postoperatively (temperature q6h; CRP/WBC every 24–48 h)',
-                    'Early symptomatic treatment (antipyretics / NSAIDs) if fever develops',
-                    'Maintain adequate hydration',
-                    'Confirm a downward trend of inflammatory markers before discharge'
+                    '28 of 198 patients (14.1%) were in this tier',
+                    'Observed PIS: 3 of 28 patients (10.7%)'
                 ]
             },
             high: {
-                title: '🚨 High risk (>30%) — Intensified, individualized management',
+                title: 'High risk (>30%) — Observed external-cohort outcomes',
                 cls: 'high',
                 items: [
-                    'Short-course individualized anti-inflammatory therapy (NSAIDs; corticosteroids for refractory pyrexia per institutional protocol) after exclusion of infection',
-                    'Avoid prolonged antibiotics without microbiological evidence of infection',
-                    'Intensified postoperative monitoring in a step-down / ICU setting; daily CRP/WBC (± procalcitonin)',
-                    'Exclude infection (e.g., blood cultures) before attributing inflammation to PIS',
-                    'Multidisciplinary review; extend observation before discharge'
+                    '35 of 198 patients (17.7%) were in this tier',
+                    'Observed PIS: 19 of 35 patients (54.3%)'
                 ]
             }
         };
@@ -528,7 +520,7 @@
             let riskClass, riskText, rowId, color, tier;
             if (prob < MODEL.strata.low) {
                 riskClass = 'risk-low'; riskText = 'Low risk'; rowId = 'rowLow'; color = '#28a745'; tier = 'low';
-            } else if (prob < MODEL.strata.high) {
+            } else if (prob <= MODEL.strata.high) {
                 riskClass = 'risk-moderate'; riskText = 'Intermediate risk'; rowId = 'rowMid'; color = '#e0a800'; tier = 'intermediate';
             } else {
                 riskClass = 'risk-high'; riskText = 'High risk'; rowId = 'rowHigh'; color = '#dc3545'; tier = 'high';
@@ -550,7 +542,7 @@
                 document.getElementById(id).style.background = (id === rowId) ? '#f0f2ff' : '';
             });
 
-            // Management panel
+            // Observed-outcomes panel
             const mg = MANAGEMENT[tier];
             const panel = document.getElementById('managementPanel');
             panel.className = 'management-panel ' + mg.cls;
@@ -560,8 +552,8 @@
             // Threshold classification
             const overThr = prob >= MODEL.threshold;
             document.getElementById('thresholdNote').innerHTML = overThr
-                ? `⚠️ Predicted probability ≥ decision threshold <strong>0.321</strong>: classified as <strong>PIS high-risk (positive)</strong>. Intensified postoperative monitoring of temperature and inflammatory markers is advised.`
-                : `✅ Predicted probability &lt; decision threshold <strong>0.321</strong>: classified as <strong>low-risk (negative)</strong> (specificity 94.6%, NPV 91.4% at this threshold).`;
+                ? `Predicted probability ≥ decision threshold <strong>0.321</strong>: classified as <strong>threshold-positive</strong>. No treatment or monitoring recommendation is made.`
+                : `Predicted probability &lt; decision threshold <strong>0.321</strong>: classified as <strong>threshold-negative</strong> (model-selection-set specificity 94.6%, NPV 91.4%). No treatment or monitoring recommendation is made.`;
             document.getElementById('detailProb').textContent = pct + '%';
             document.getElementById('detailLogit').textContent = logit.toFixed(3);
             const dc = document.getElementById('detailClass');
