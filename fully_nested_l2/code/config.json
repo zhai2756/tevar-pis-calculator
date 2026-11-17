@@ -1,0 +1,137 @@
+{
+  "analysis": "fully_nested_l2_sensitivity",
+  "purpose": "Post hoc fully nested sensitivity analysis of the complete L2-penalized logistic-regression pipeline within the 540-patient training set. Does not modify the locked final model.",
+  "seed": 42,
+  "data": {
+    "raw_training_540_csv": "../data/raw_training_540.csv",
+    "n_train": 540,
+    "n_events_expected": 97,
+    "excluded": {
+      "model_selection_set_n": 136,
+      "external_cohort_n": 198,
+      "note": "136-patient model-selection set and 198-patient external cohort never enter this analysis. External cohort is used only for descriptive comparison with the existing external AUC 0.801 after this analysis completes."
+    }
+  },
+  "outer_cv": {
+    "class": "RepeatedStratifiedKFold",
+    "n_splits": 10,
+    "n_repeats": 5,
+    "random_state": 42
+  },
+  "inner_cv": {
+    "class": "StratifiedKFold",
+    "n_splits": 5,
+    "shuffle": true,
+    "random_state_rule": "42 + outer_fold_id",
+    "purpose": "C tuning and inner-loop selection only"
+  },
+  "final_model": {
+    "class": "LogisticRegression",
+    "penalty": "l2",
+    "solver": "lbfgs",
+    "max_iter": 1000,
+    "class_weight": null,
+    "note": "C re-tuned per outer fold; published locked C=0.6672367170464207 NOT used here."
+  },
+  "c_grid": {
+    "rule": "np.logspace(-4, 2, 50)",
+    "selection": "max mean inner 5-fold validation AUC; ties within 1e-6 -> smaller C (stronger regularization); boundary hit recorded, grid not expanded"
+  },
+  "preprocessing_order": [
+    "1. median (continuous) / mode (categorical & ordinal & binary) imputation fitted on the current training subset",
+    "2. truncation to prespecified clinical bounds (see clinical_bounds_applied)",
+    "3. deterministic feature engineering (squares, log1p on clipped values, interactions, recalculated ratios with zero-denominator -> 0.01, composites)",
+    "4. RobustScaler on all 42 continuous engineered features: center = subset median, scale = subset IQR, scale = 1.0 if IQR == 0 (e.g. contrast_ml)",
+    "5. categorical fixed encodings: tbad_stage 0/1/2, tbad_stratum 0/1/2 (clinical 1/2/3 minus 1); binary 0/1",
+    "6. transform validation/test folds with the training-subset parameters"
+  ],
+  "clinical_bounds_applied": {
+    "age": [18, 100],
+    "bmi": [10, 50],
+    "height_cm": [1.0, 2.2],
+    "weight_kg": [30, 150],
+    "wbc_pre": [1, 50],
+    "hgb_pre": [50, 200],
+    "plt_pre": [20, 800],
+    "neut_pre": [0.5, 40],
+    "lym_pre": [0.1, 10],
+    "mono_pre": [0.05, 5],
+    "crp_pre": [0, 500],
+    "alb_pre": [10, 60],
+    "cre_pre": [20, 500],
+    "fib_pre": [0.5, 15],
+    "aptt_pre": [15, 100],
+    "d_dimer_pre": [0, 100],
+    "bnp_pre": [0, 10000],
+    "operation_time_min": [0, 600],
+    "blood_loss_ml": [0, 5000],
+    "contrast_ml": [0, 500],
+    "stent_count": [0, 10]
+  },
+  "feature_engineering_frozen_definitions": {
+    "source": "Recovered exactly (r^2 = 1 to 1e-12) against stage1_optimized archived RobustScaler-inverted training values, except the two composites as noted",
+    "squares": {"age_sq": "age^2", "bmi_sq": "bmi^2", "neut_pre_sq": "clip(neut_pre,0.5,40)^2", "nlr_sq": "nlr_recalc^2", "siri_sq": "siri_recalc^2"},
+    "logs": {"log_crp_pre": "log1p(clip(crp_pre,0,500))", "log_bnp_pre": "log1p(clip(bnp_pre,0,10000))", "log_cre_pre": "log1p(clip(cre_pre,20,500))", "log_d_dimer_pre": "log1p(clip(d_dimer_pre,0,100))"},
+    "interactions": {"age_x_neut": "age * clip(neut_pre,0.5,40)", "bmi_x_age": "bmi * age", "tbad_x_age": "tbad_stratum clinical (1/2/3) * age", "siri_x_nlr": "siri_recalc * nlr_recalc"},
+    "recalculated_ratios": {
+      "rule": "recomputed from imputed components; zero denominators replaced by 0.01",
+      "nlr": "neut_pre / lym_pre", "pnr": "plt_pre / neut_pre", "far": "fib_pre / alb_pre",
+      "siri": "neut_pre * mono_pre / lym_pre", "sii": "plt_pre * neut_pre / lym_pre"
+    },
+    "composites": {
+      "comorbidity_count": "hypertension + cad + dm + smoking + alcohol (exact integer match vs archived)",
+      "pni": "clip(alb_pre,10,60) + 5 * clip(lym_pre,0.1,10) (exact)",
+      "inflammation_score": "crp_pre + wbc_pre (documented definition from preprocess_ext_v3.py; exact historical internal formula not byte-recoverable - fixed reproducible definition adopted, NOT tuned to recover any variable set)",
+      "surgery_complexity": "operation_time_min/60 + stent_count, computed from clipped values (documented definition from preprocess_ext_v3.py; same caveat as inflammation_score)"
+    },
+    "feature_name_space_n": 53
+  },
+  "feature_selection": {
+    "fdr_univariate_logistic": {"method": "univariate LogisticRegression per engineered feature (Wald p)", "correction": "Benjamini-Hochberg over all 53 features", "keep": "q < 0.05"},
+    "lasso_1se": {
+      "estimator": "LogisticRegression(penalty='l1', solver='saga', max_iter=10000, class_weight=None)",
+      "inner_cv": "10-fold stratified on the current training subset",
+      "c_grid": "np.logspace(-4, 2, 100)",
+      "rule": "C_min = argmax mean CV AUC; C_1se = smallest C with mean_AUC >= max - SE(C_min); keep nonzero coefficients at C_1se",
+      "warm_start_path": "C-grid fitted in ascending C order with warm_start=True (numerical efficiency only; estimator l1/saga, C grid, 1-SE rule unchanged); final refit at C_1se is a cold start",
+      "logging": ["C_min", "C_1se", "mean AUC and SE at both"]
+    },
+    "rf_permutation": {
+      "config": {"n_estimators": 99, "max_depth": 5, "min_samples_leaf": 5, "max_features": "sqrt", "random_state": 42, "class_weight": null},
+      "class_weight_decision": "Option A: class_weight=None to match the current manuscript statement that class weighting was used only for XGBoost and LightGBM candidate models",
+      "holdout": "80/20 stratified split of the current training subset with a fixed derived seed",
+      "n_repeats": 20,
+      "keep": "mean AUC decrease > 0 on the selector holdout"
+    },
+    "xgb_permutation": {
+      "config": {"n_estimators": 149, "max_depth": 3, "learning_rate": 0.0121841865, "scale_pos_weight": "subset negatives / positives", "random_state": 42, "eval_metric": "logloss"},
+      "holdout": "80/20 stratified split of the current training subset with a fixed derived seed (same split as RF)",
+      "n_repeats": 20,
+      "keep": "mean AUC decrease > 0 on the selector holdout"
+    },
+    "vote": {"keep": ">= 2 of 4 selectors", "no_max_features_cap": true, "no_forcing_original_nine": true},
+    "fallbacks": {
+      "empty_vote": "use the single feature with smallest FDR q; record fallback='empty_vote_fdr'",
+      "empty_after_vif": "keep the feature with most votes and lowest VIF; record fallback='empty_vif_top_vote'"
+    }
+  },
+  "vif": {
+    "threshold": 5,
+    "rule": "iterative with intercept; recompute until all VIF <= 5; drop max-VIF feature; if a main effect and its square are both candidates, drop the square; if VIF is infinite (perfect collinearity), drop the derived term with the highest mean absolute correlation that is not a clinical main effect; log every removal with before/after VIF",
+    "no_core_protection": true,
+    "note": "Does NOT reuse the old feature_selection_audit.txt core-variable protection; reproduces the automatic VIF rule described in Methods"
+  },
+  "threshold_for_classification": {
+    "value": 0.32094380290459346,
+    "source": "locked threshold from the 136-patient model-selection set; NOT re-optimized in this analysis"
+  },
+  "bootstrap": {
+    "unit": "patient",
+    "n_resamples": 1000,
+    "seed": 20261106,
+    "rule": "resample 540 patients with replacement; retain repeated patients with multiplicity; calculate the 5 repeat-level AUCs separately within each resample and take their mean; 95% CI = 2.5% and 97.5% quantiles of the mean-AUC bootstrap distribution",
+    "forbidden": "pooling the 2700 repeat-level predictions into one AUC per bootstrap resample or treating them as 2700 independent patients"
+  },
+  "primary_metric": "mean of the 5 repeat-level pooled out-of-fold AUCs",
+  "also_report": ["per-repeat AUC", "sd of 5 repeat AUCs", "fold-level AUC mean/sd (descriptive only)", "AUC-PR", "Brier", "calibration slope/intercept (Cox)", "decision-curve net benefit", "sensitivity/specificity/PPV/NPV at the locked threshold"]
+}
