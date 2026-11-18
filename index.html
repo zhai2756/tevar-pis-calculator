@@ -305,9 +305,9 @@
             </div>
 
             <div class="management-panel" id="managementPanel">
-                <h3 id="mpTitle">Recommended management</h3>
+                <h3 id="mpTitle">Research monitoring considerations</h3>
                 <ul id="mpList"></ul>
-                <div class="mp-note">Three-tier risk-adjusted pathway from the source study. These are general suggestions — always follow institutional protocols and the treating physician's judgment.</div>
+                <div class="mp-note">Hypothetical monitoring framework for prospective research (manuscript Table 6). Observed event rates are retrospective results. No drug, ICU/step-down, or other treatment recommendations are provided; institutional protocols and clinical judgment always apply.</div>
             </div>
 
             <div class="details-grid">
@@ -352,7 +352,7 @@
                     <li>Model: Ridge logistic regression (L2 penalty, C=0.667, lbfgs) with 9 predictors, including a squared neutrophil term</li>
                     <li>Development cohort: Northern Jiangsu People's Hospital (training n=540; 10-fold cross-validation mean AUC 0.818; non-nested pooled out-of-fold AUC 0.811, 95% CI 0.759–0.859, which is optimistic; fully nested mean AUC 0.770, 95% CI 0.713–0.823, which is preferred; apparent training AUC 0.839)</li>
                     <li>Model-selection set: n=136, AUC 0.784 (95% CI 0.684–0.884); external validation: n=198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097</li>
-                    <li>The Youden threshold 0.321 is reported in manuscript Table 4 (model-selection set: sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4%); it is not used by this calculator to assign management</li>
+                    <li>The model-selection-derived Youden threshold 0.321 is reported in manuscript Table 4 (model-selection set: sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4%); it is not used by this calculator to assign clinical actions</li>
                     <li>Inputs outside the clinical bounds used in model training are clipped before calculation (age 18–100 y; operation time 0–600 min; contrast 0–500 mL; neutrophils 0.5–40; APTT 15–100; fibrinogen 0.5–15; platelets 20–800)</li>
                     <li>This tool is for research use only and does not replace clinical judgment</li>
                 </ul>
@@ -404,38 +404,33 @@
             ['age',           'Age']
         ];
 
-        // Three-tier risk-adjusted management pathway (source study, Clinical Implications)
+        // Three-tier hypothetical research-monitoring framework (manuscript Table 6)
         const MANAGEMENT = {
             low: {
-                title: '✅ Low risk (<15%) — Standard perioperative care',
+                title: '✅ Low research-risk stratum (<15%)',
                 cls: 'low',
                 items: [
-                    'Standard perioperative care pathway',
-                    'Routine vital-sign and temperature monitoring',
-                    'Inflammatory markers (WBC/neutrophils, CRP) on postoperative days 1 and 3',
-                    'Standard CTA surveillance (e.g., 1 month after TEVAR)',
-                    'No prophylactic anti-inflammatory therapy indicated'
+                    'Predicted probability below 15%; external-cohort observed PIS rate 8.9% (12/135)',
+                    'Hypothetical standard research monitoring schedule; no model-guided change',
+                    'No drug, ICU/step-down, or other treatment recommendation; research and education only'
                 ]
             },
             intermediate: {
-                title: '⚠️ Intermediate risk (15–30%) — Enhanced surveillance',
+                title: '⚠️ Intermediate research-risk stratum (15–30%)',
                 cls: 'intermediate',
                 items: [
-                    'Enhanced inflammatory-marker surveillance during the first 24–72 h postoperatively (temperature q6h; CRP/WBC every 24–48 h)',
-                    'Early symptomatic treatment (antipyretics / NSAIDs) if fever develops',
-                    'Maintain adequate hydration',
-                    'Confirm a downward trend of inflammatory markers before discharge'
+                    'Predicted probability 15–30%; external-cohort observed PIS rate 10.7% (3/28)',
+                    'Not separated from the low stratum (10.7% vs 8.9%; p = 0.724): exploratory monitoring-escalation band only',
+                    'Hypothetical increase in observation frequency, to be tested prospectively; no treatment recommendation'
                 ]
             },
             high: {
-                title: '🚨 High risk (>30%) — Intensified, individualized management',
+                title: '🚨 High research-risk stratum (>30%)',
                 cls: 'high',
                 items: [
-                    'If PIS occurs, consider short-course individualized anti-inflammatory therapy (NSAIDs; corticosteroids for refractory pyrexia per institutional protocol) after exclusion of infection',
-                    'Avoid prolonged antibiotics without microbiological evidence of infection',
-                    'Intensified postoperative monitoring in a step-down / ICU setting; daily CRP/WBC (± procalcitonin)',
-                    'Exclude infection (e.g., blood cultures) before attributing inflammation to PIS',
-                    'Multidisciplinary review; extend observation before discharge'
+                    'Predicted probability above 30%; external-cohort observed PIS rate 54.3% (19/35)',
+                    'Hypothetical higher-intensity observation schedule, to be tested prospectively',
+                    'Observed risk enrichment does not establish benefit from any intervention; no drug, ICU/step-down, or other treatment recommendation'
                 ]
             }
         };
@@ -541,7 +536,7 @@
                 document.getElementById(id).style.background = (id === rowId) ? '#f0f2ff' : '';
             });
 
-            // Management panel
+            // Research monitoring panel
             const mg = MANAGEMENT[tier];
             const panel = document.getElementById('managementPanel');
             panel.className = 'management-panel ' + mg.cls;
@@ -550,7 +545,7 @@
 
             // Research-use risk-stratum note; no binary treatment classification.
             document.getElementById('thresholdNote').innerHTML =
-                `The three risk strata are study-informed educational categories, not treatment indications. The 0.321 threshold reported in manuscript Table 4 is not used to classify patients or assign management in this calculator.`;
+                `The three risk strata are study-informed educational categories, not treatment indications. The model-selection-derived 0.321 threshold reported in manuscript Table 4 is used for descriptive classification only and is not used to assign clinical actions in this calculator.`;
             document.getElementById('detailProb').textContent = pct + '%';
             document.getElementById('detailLogit').textContent = logit.toFixed(3);
 

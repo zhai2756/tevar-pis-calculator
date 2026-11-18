@@ -22,7 +22,7 @@ The public release contains code and aggregate results. Patient-level datasets a
 
 | Path | Content |
 |---|---|
-| `index.html` | Standalone browser-based calculator |
+| `index.html` | Standalone browser-based calculator with three-tier risk strata and a hypothetical research-monitoring framework (no drug, ICU/step-down, or other treatment recommendations) |
 | `model/ridge_model_coefficients.json` | Coefficients, intercept, hyperparameters, and locked performance summary |
 | `model/preprocessing_params.json` | Clinical bounds, RobustScaler parameters, TBAD encoding, and squared-term definition |
 | `model/ridge_final_model.pkl` | Frozen scikit-learn model |
@@ -44,7 +44,7 @@ The public release contains code and aggregate results. Patient-level datasets a
 - L2-penalized logistic regression; `C = 0.6672367170464207`, solver `lbfgs`, random seed 42.
 - Predictors: age, operation time, contrast volume, TBAD stratum, preoperative neutrophil count, preoperative APTT, preoperative fibrinogen, squared neutrophil count, and preoperative platelet count.
 - Coefficients apply after clinical-bound clipping and RobustScaler transformation. The squared neutrophil term is calculated after clipping and then standardized. TBAD stratum is ordinal-encoded as 1 → 0, 2 → 1, 3 → 2 and is not scaled.
-- Reported threshold: 0.321 (stored exact value: 0.32094380290459346). In the model-selection set, this gives 14 TP, 6 FP, 106 TN, and 10 FN; sensitivity 58.3%, specificity 94.6%, PPV 70.0%, and NPV 91.4%.
+- Reported model-selection-derived threshold: 0.321 (stored exact value: 0.32094380290459346). In the model-selection set, this gives 14 TP, 6 FP, 106 TN, and 10 FN; sensitivity 58.3%, specificity 94.6%, PPV 70.0%, and NPV 91.4%.
 - Risk strata: low < 15%; intermediate 15%–30%, inclusive; high > 30%. External-cohort observed PIS rates were 8.9% (12/135), 10.7% (3/28), and 54.3% (19/35), respectively.
 
 Open `index.html` in a modern browser or use the live calculator. Calculations are performed locally in the browser.
@@ -144,9 +144,9 @@ Patient-level datasets are available from the corresponding author upon reasonab
 
 **Current release:** v2.2.
 
-Cite the software using the version-specific DOI shown on the Zenodo release page, or use the concept DOI for the project as a whole: https://doi.org/10.5281/zenodo.21466816.
+**Version DOI:** https://doi.org/10.5281/zenodo.24331526.
 
-The concept DOI always resolves to the latest release and provides access to all archived versions.
+Cite the software using the v2.2 version-specific DOI above.
 
 ## Use
 
