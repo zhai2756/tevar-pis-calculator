@@ -305,9 +305,9 @@
             </div>
 
             <div class="management-panel" id="managementPanel">
-                <h3 id="mpTitle">Observed outcomes by research risk tier</h3>
+                <h3 id="mpTitle">Recommended management</h3>
                 <ul id="mpList"></ul>
-                <div class="mp-note">Descriptive findings from the external validation cohort. No treatment or monitoring recommendation is made.</div>
+                <div class="mp-note">Three-tier risk-adjusted pathway from the source study. These are general suggestions — always follow institutional protocols and the treating physician's judgment.</div>
             </div>
 
             <div class="details-grid">
@@ -318,14 +318,6 @@
                 <div class="detail-item">
                     <div class="value" id="detailLogit">-</div>
                     <div class="label">Logit score</div>
-                </div>
-                <div class="detail-item">
-                    <div class="value" id="detailThreshold">0.321</div>
-                    <div class="label">Decision threshold (Youden)</div>
-                </div>
-                <div class="detail-item">
-                    <div class="value" id="detailClass">-</div>
-                    <div class="label">Threshold classification</div>
                 </div>
             </div>
 
@@ -358,9 +350,9 @@
                 <strong>💡 About this model</strong>
                 <ul style="margin-left: 20px; margin-top: 8px;">
                     <li>Model: Ridge logistic regression (L2 penalty, C=0.667, lbfgs) with 9 predictors, including a squared neutrophil term</li>
-                    <li>Development cohort: Northern Jiangsu People's Hospital (training n=540; 10-fold cross-validation AUC 0.806; training AUC 0.839)</li>
-                    <li>Validation: model-selection set n=136, AUC 0.784 (95% CI 0.684–0.884); external n=198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097</li>
-                    <li>Threshold 0.321 (Youden-optimal, derived from the model-selection set): sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4% (model-selection set)</li>
+                    <li>Development cohort: Northern Jiangsu People's Hospital (training n=540; 10-fold cross-validation mean AUC 0.818; non-nested pooled out-of-fold AUC 0.811, 95% CI 0.759–0.859, which is optimistic; fully nested mean AUC 0.770, 95% CI 0.713–0.823, which is preferred; apparent training AUC 0.839)</li>
+                    <li>Model-selection set: n=136, AUC 0.784 (95% CI 0.684–0.884); external validation: n=198 (The Second Affiliated Hospital of Nanjing Medical University), AUC 0.801 (95% CI 0.725–0.877), Brier 0.097</li>
+                    <li>The Youden threshold 0.321 is reported in manuscript Table 4 (model-selection set: sensitivity 58.3%, specificity 94.6%, PPV 70.0%, NPV 91.4%); it is not used by this calculator to assign management</li>
                     <li>Inputs outside the clinical bounds used in model training are clipped before calculation (age 18–100 y; operation time 0–600 min; contrast 0–500 mL; neutrophils 0.5–40; APTT 15–100; fibrinogen 0.5–15; platelets 20–800)</li>
                     <li>This tool is for research use only and does not replace clinical judgment</li>
                 </ul>
@@ -397,8 +389,7 @@
                 neut_pre_sq:        { coef: -0.2891571542613174,   median: 31.136400000000002, iqr: 50.138024999999985 }
             },
             tbadCoef: -1.2359143258512328,   // cat_ordinal__tbad_stratum: raw 1->0, 2->1, 3->2 (not scaled)
-            threshold: 0.321,                // Youden-optimal threshold (model-selection set)
-            strata: { low: 0.15, high: 0.30 } // Low <15% | Intermediate 15–30% | High >30%
+            strata: { low: 0.15, high: 0.30 } // Low <15% | Intermediate 15–30% (inclusive) | High >30%
         };
 
         const FEATURE_LABELS = [
@@ -413,30 +404,38 @@
             ['age',           'Age']
         ];
 
-        // Descriptive external-cohort outcomes by research risk tier; no management advice.
+        // Three-tier risk-adjusted management pathway (source study, Clinical Implications)
         const MANAGEMENT = {
             low: {
-                title: 'Low risk (<15%) — Observed external-cohort outcomes',
+                title: '✅ Low risk (<15%) — Standard perioperative care',
                 cls: 'low',
                 items: [
-                    '135 of 198 patients (68.2%) were in this tier',
-                    'Observed PIS: 12 of 135 patients (8.9%)'
+                    'Standard perioperative care pathway',
+                    'Routine vital-sign and temperature monitoring',
+                    'Inflammatory markers (WBC/neutrophils, CRP) on postoperative days 1 and 3',
+                    'Standard CTA surveillance (e.g., 1 month after TEVAR)',
+                    'No prophylactic anti-inflammatory therapy indicated'
                 ]
             },
             intermediate: {
-                title: 'Intermediate risk (15–30%) — Observed external-cohort outcomes',
+                title: '⚠️ Intermediate risk (15–30%) — Enhanced surveillance',
                 cls: 'intermediate',
                 items: [
-                    '28 of 198 patients (14.1%) were in this tier',
-                    'Observed PIS: 3 of 28 patients (10.7%)'
+                    'Enhanced inflammatory-marker surveillance during the first 24–72 h postoperatively (temperature q6h; CRP/WBC every 24–48 h)',
+                    'Early symptomatic treatment (antipyretics / NSAIDs) if fever develops',
+                    'Maintain adequate hydration',
+                    'Confirm a downward trend of inflammatory markers before discharge'
                 ]
             },
             high: {
-                title: 'High risk (>30%) — Observed external-cohort outcomes',
+                title: '🚨 High risk (>30%) — Intensified, individualized management',
                 cls: 'high',
                 items: [
-                    '35 of 198 patients (17.7%) were in this tier',
-                    'Observed PIS: 19 of 35 patients (54.3%)'
+                    'If PIS occurs, consider short-course individualized anti-inflammatory therapy (NSAIDs; corticosteroids for refractory pyrexia per institutional protocol) after exclusion of infection',
+                    'Avoid prolonged antibiotics without microbiological evidence of infection',
+                    'Intensified postoperative monitoring in a step-down / ICU setting; daily CRP/WBC (± procalcitonin)',
+                    'Exclude infection (e.g., blood cultures) before attributing inflammation to PIS',
+                    'Multidisciplinary review; extend observation before discharge'
                 ]
             }
         };
@@ -542,23 +541,18 @@
                 document.getElementById(id).style.background = (id === rowId) ? '#f0f2ff' : '';
             });
 
-            // Observed-outcomes panel
+            // Management panel
             const mg = MANAGEMENT[tier];
             const panel = document.getElementById('managementPanel');
             panel.className = 'management-panel ' + mg.cls;
             document.getElementById('mpTitle').textContent = mg.title;
             document.getElementById('mpList').innerHTML = mg.items.map(i => `<li>${i}</li>`).join('');
 
-            // Threshold classification
-            const overThr = prob >= MODEL.threshold;
-            document.getElementById('thresholdNote').innerHTML = overThr
-                ? `Predicted probability ≥ decision threshold <strong>0.321</strong>: classified as <strong>threshold-positive</strong>. No treatment or monitoring recommendation is made.`
-                : `Predicted probability &lt; decision threshold <strong>0.321</strong>: classified as <strong>threshold-negative</strong> (model-selection-set specificity 94.6%, NPV 91.4%). No treatment or monitoring recommendation is made.`;
+            // Research-use risk-stratum note; no binary treatment classification.
+            document.getElementById('thresholdNote').innerHTML =
+                `The three risk strata are study-informed educational categories, not treatment indications. The 0.321 threshold reported in manuscript Table 4 is not used to classify patients or assign management in this calculator.`;
             document.getElementById('detailProb').textContent = pct + '%';
             document.getElementById('detailLogit').textContent = logit.toFixed(3);
-            const dc = document.getElementById('detailClass');
-            dc.textContent = overThr ? 'Positive (≥0.321)' : 'Negative (<0.321)';
-            dc.style.color = overThr ? '#dc3545' : '#28a745';
 
             // Contribution bars (sorted by |contribution|)
             const rows = FEATURE_LABELS.map(([k, label]) => ({ label, v: contrib[k] }));
