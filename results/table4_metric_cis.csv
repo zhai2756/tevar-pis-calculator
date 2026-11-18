@@ -1,0 +1,28 @@
+cohort,cohort_label,n,events,threshold,metric,point_estimate,ci95_low,ci95_high,method,valid_bootstrap_resamples
+train,Training,540,97,0.321,AUC-ROC,0.8385655442042308,0.791,0.879,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,AUC-PR,0.594416704913653,0.5088288505582277,0.6866810401639883,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,Brier score,0.10388313176133855,0.09074504991549777,0.11680147423866934,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,Sensitivity,0.5463917525773195,0.443,0.649,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,Specificity,0.9345372460496614,0.91,0.957,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,Balanced accuracy,0.7404644993134905,0.6911472271997393,0.7920231086081311,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,F1 score,0.5921787709497207,0.509090909090909,0.674485222868217,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+train,Training,540,97,0.321,PPV,0.6463414634146342,0.5384408666236907,0.7411443166865238,Wilson score 95% CI,not applicable
+train,Training,540,97,0.321,NPV,0.9039301310043668,0.8734852937775895,0.9276554287222701,Wilson score 95% CI,not applicable
+internal,Model-selection,136,24,0.32094380290459346,AUC-ROC,0.7838541666666666,0.684,0.884,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,AUC-PR,0.6582882938725808,0.4989523998647328,0.8149532924514842,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,Brier score,0.0971503002004782,0.076,0.118,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,Sensitivity,0.5833333333333334,0.368,0.798,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,Specificity,0.9464285714285714,0.884,1.0,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,Balanced accuracy,0.7648809523809523,0.665141369047619,0.8645833333333333,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,F1 score,0.6363636363636364,0.46153846153846156,0.7918749999999998,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+internal,Model-selection,136,24,0.32094380290459346,PPV,0.7,0.4810271816464765,0.8545227551323956,Wilson score 95% CI,not applicable
+internal,Model-selection,136,24,0.32094380290459346,NPV,0.9137931034482759,0.8485576942481899,0.9525006452003851,Wilson score 95% CI,not applicable
+external,External validation,198,34,0.321,AUC-ROC,0.8005738880918222,0.725,0.877,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,AUC-PR,0.6510307245911578,0.5210620806111484,0.7839713999272667,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,Brier score,0.096970319448862,0.07687904958311366,0.1169026445755328,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,Sensitivity,0.5588235294117647,0.395,0.711,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,Specificity,0.9207317073170732,0.869,0.953,Previously reported 95% CI retained unchanged; newly added Table 4 intervals use: Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,Balanced accuracy,0.7397776183644189,0.6540530846484935,0.8280129124820661,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,F1 score,0.5757575757575758,0.4332692307692308,0.705977229601518,Percentile 95% CI; 1000 stratified patient-level bootstrap resamples; seed 42,1000
+external,External validation,198,34,0.321,PPV,0.59375,0.42260024875382873,0.7448036515733456,Wilson score 95% CI,not applicable
+external,External validation,198,34,0.321,NPV,0.9096385542168675,0.8562717896271411,0.9444749829472666,Wilson score 95% CI,not applicable

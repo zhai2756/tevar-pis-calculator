@@ -1,0 +1,115 @@
+{
+  "model": "Locked ridge logistic regression",
+  "model_file": "model/ridge_final_model.pkl",
+  "features": [
+    "num__age",
+    "num__operation_time_min",
+    "num__contrast_ml",
+    "cat_ordinal__tbad_stratum",
+    "num__neut_pre",
+    "num__aptt_pre",
+    "num__fib_pre",
+    "num__neut_pre_sq",
+    "num__plt_pre"
+  ],
+  "thresholds": {
+    "train": 0.321,
+    "internal": 0.32094380290459346,
+    "external": 0.321
+  },
+  "n_bootstrap": 1000,
+  "seed": 42,
+  "bootstrap_design": "Separate resampling with replacement within PIS-positive and PIS-negative patients; original class counts retained",
+  "interval": "Percentile 2.5th and 97.5th",
+  "ppv_npv_interval": "Wilson score 95% CI",
+  "retained_interval_policy": "Previously reported Table 4 intervals are retained unchanged; only missing intervals were newly calculated",
+  "previously_reported_intervals": {
+    "train|AUC-ROC": [
+      0.791,
+      0.879
+    ],
+    "internal|AUC-ROC": [
+      0.684,
+      0.884
+    ],
+    "external|AUC-ROC": [
+      0.725,
+      0.877
+    ],
+    "train|Sensitivity": [
+      0.443,
+      0.649
+    ],
+    "internal|Sensitivity": [
+      0.368,
+      0.798
+    ],
+    "external|Sensitivity": [
+      0.395,
+      0.711
+    ],
+    "train|Specificity": [
+      0.91,
+      0.957
+    ],
+    "internal|Specificity": [
+      0.884,
+      1.0
+    ],
+    "external|Specificity": [
+      0.869,
+      0.953
+    ],
+    "internal|Brier score": [
+      0.076,
+      0.118
+    ]
+  },
+  "point_estimates": {
+    "train": {
+      "AUC-ROC": 0.8385655442042308,
+      "AUC-PR": 0.594416704913653,
+      "Brier score": 0.10388313176133855,
+      "Sensitivity": 0.5463917525773195,
+      "Specificity": 0.9345372460496614,
+      "PPV": 0.6463414634146342,
+      "NPV": 0.9039301310043668,
+      "Balanced accuracy": 0.7404644993134905,
+      "F1 score": 0.5921787709497207,
+      "TP": 53,
+      "FP": 29,
+      "TN": 414,
+      "FN": 44
+    },
+    "internal": {
+      "AUC-ROC": 0.7838541666666666,
+      "AUC-PR": 0.6582882938725808,
+      "Brier score": 0.0971503002004782,
+      "Sensitivity": 0.5833333333333334,
+      "Specificity": 0.9464285714285714,
+      "PPV": 0.7,
+      "NPV": 0.9137931034482759,
+      "Balanced accuracy": 0.7648809523809523,
+      "F1 score": 0.6363636363636364,
+      "TP": 14,
+      "FP": 6,
+      "TN": 106,
+      "FN": 10
+    },
+    "external": {
+      "AUC-ROC": 0.8005738880918222,
+      "AUC-PR": 0.6510307245911578,
+      "Brier score": 0.096970319448862,
+      "Sensitivity": 0.5588235294117647,
+      "Specificity": 0.9207317073170732,
+      "PPV": 0.59375,
+      "NPV": 0.9096385542168675,
+      "Balanced accuracy": 0.7397776183644189,
+      "F1 score": 0.5757575757575758,
+      "TP": 19,
+      "FP": 13,
+      "TN": 151,
+      "FN": 15
+    }
+  }
+}
